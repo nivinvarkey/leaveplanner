@@ -1,86 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Epic Piping: Leave Planner 2026</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Piping: Leave Manager Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+        .gantt-container { display: grid; grid-template-columns: 320px 1fr; }
+        .week-segment { flex: 1; border-right: 1px solid #1e293b; font-size: 8px; text-align: center; padding-top: 4px; color: #475569; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body class="p-4 md:p-6">
 
-<div class="max-w-[1650px] mx-auto">
-    <header class="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-6 gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-emerald-400 tracking-tight underline decoration-emerald-800">LEAVE RESOURCE PLANNER 2026</h1>
-            <p class="text-slate-500 text-sm">Conflict Engine + Team Availability + Management Tools</p>
-        </div>
-        <div class="flex flex-wrap gap-3 bg-slate-900/80 p-3 rounded-xl border border-slate-800 shadow-xl">
-            <input type="text" id="nameSearch" placeholder="Search name..." oninput="render()" class="bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-sm outline-none focus:border-emerald-500 w-40">
-            <select id="teamFilter" onchange="render()" class="bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-sm outline-none cursor-pointer">
-                <option value="All">All Teams</option>
-                <option value="Team B">Team B</option>
-                <option value="Team C">Team C</option>
-                <option value="Support Team">Support Team</option>
-                <option value="DC Team">DC Team</option>
-                <option value="Material Team">Material Team</option>
-            </select>
-            <button onclick="toggleAdmin()" id="adminBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded text-sm font-bold transition-all shadow-lg">Admin Login</button>
-        </div>
-    </header>
-
-    <!-- Admin Panel -->
-    <div class="admin-only mb-6 bg-slate-900 border-2 border-emerald-500/30 p-5 rounded-2xl shadow-2xl relative">
-        <h3 id="formTitle" class="text-emerald-400 font-bold text-xs mb-4 uppercase tracking-widest">Add New Leave Entry</h3>
-        <input type="hidden" id="editIndex" value="-1">
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
-            <div class="flex flex-col gap-1">
-                <label class="text-[10px] text-slate-500 font-bold">NAME</label>
-                <input type="text" id="newName" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500">
-            </div>
-            <div class="flex flex-col gap-1">
-                <label class="text-[10px] text-slate-500 font-bold">DESIGNATION</label>
-                <input type="text" id="newRole" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500">
-            </div>
-            <div class="flex flex-col gap-1">
-                <label class="text-[10px] text-slate-500 font-bold">TEAM</label>
-                <select id="newTeam" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+    <div id="authSection" class="max-w-md mx-auto mt-20 bg-slate-900 p-8 rounded-2xl border border-slate-800 shadow-2xl">
+        <h2 id="authTitle" class="text-2xl font-bold text-emerald-400 mb-6 text-center">Login</h2>
+        <div class="space-y-4">
+            <input type="email" id="authEmail" placeholder="Email Address" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none focus:border-emerald-500">
+            <input type="password" id="authPass" placeholder="Password" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none focus:border-emerald-500">
+            
+            <div id="signupFields" class="hidden space-y-4">
+                <input type="text" id="authName" placeholder="Full Name" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none focus:border-emerald-500">
+                <select id="authRole" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none">
+                    <option value="employee">Employee</option>
+                    <option value="manager">Manager</option>
+                </select>
+                <select id="authTeam" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none">
                     <option>Team B</option><option>Team C</option><option>Support Team</option><option>DC Team</option><option>Material Team</option>
                 </select>
             </div>
-            <div class="flex flex-col gap-1">
-                <label class="text-[10px] text-slate-500 font-bold">START DATE</label>
-                <input type="date" id="newStart" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
-            </div>
-            <div class="flex flex-col gap-1">
-                <label class="text-[10px] text-slate-500 font-bold">END DATE</label>
-                <input type="date" id="newEnd" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
-            </div>
-            <div class="flex flex-col gap-1">
-                <label class="text-[10px] text-slate-500 font-bold">ACTION</label>
-                <button id="saveBtn" onclick="saveEntry()" class="bg-emerald-500 text-slate-900 font-black h-full rounded hover:bg-emerald-400 transition-colors py-2">SAVE ENTRY</button>
-            </div>
-            <div class="flex flex-col gap-1">
-                <label class="text-[10px] text-slate-500 font-bold">SYSTEM</label>
-                <button onclick="resetData()" class="bg-red-900/50 text-red-400 font-bold h-full rounded hover:bg-red-800 transition-colors py-2 border border-red-800/50">WIPE ALL</button>
-            </div>
+
+            <button onclick="handleAuth()" id="mainAuthBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded transition-all">Login</button>
+            <p class="text-center text-sm text-slate-500">
+                <span id="toggleText">Don't have an account?</span> 
+                <button onclick="toggleAuthMode()" class="text-emerald-400 hover:underline">Click here</button>
+            </p>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div class="lg:col-span-1 space-y-6">
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Team Availability %</h2>
-                <div id="availabilityStats" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div>
+    <div id="dashboardSection" class="hidden max-w-[1650px] mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-emerald-400">ANNUAL LEAVE PLAN - 2026</h1>
+                <p id="userWelcome" class="text-slate-500 text-sm"></p>
             </div>
-            <div id="conflictPanel" class="hidden bg-red-950/20 border border-red-900/40 rounded-xl p-4 shadow-inner">
-                <h2 class="text-red-500 font-bold text-xs uppercase tracking-widest mb-3">⚠️ Critical Collapses</h2>
-                <div id="conflictList" class="space-y-2"></div>
+            <button onclick="logout()" class="bg-slate-800 hover:bg-red-900/40 text-slate-300 px-4 py-2 rounded text-sm border border-slate-700 transition-all">Logout</button>
+        </header>
+
+        <div id="adminControls" class="hidden mb-6 bg-slate-900 border border-emerald-500/30 p-4 rounded-xl">
+            <h3 class="text-emerald-400 font-bold text-xs uppercase mb-4 tracking-widest">Management Panel</h3>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <input type="text" id="leaveName" placeholder="Employee Name" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+                <input type="date" id="leaveStart" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+                <input type="date" id="leaveEnd" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+                <button onclick="addLeaveEntry()" class="bg-emerald-600 text-white font-bold rounded text-sm hover:bg-emerald-500">Add Entry</button>
             </div>
         </div>
-        <div class="lg:col-span-3 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
+
+        <div id="conflictPanel" class="hidden mb-6 bg-red-950/20 border border-red-900/40 rounded-xl p-4">
+            <h2 class="text-red-500 font-bold text-xs uppercase mb-3">⚠️ My Overlap Alerts</h2>
+            <div id="conflictList" class="text-xs text-red-400"></div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
             <div class="gantt-container bg-slate-800/40 border-b border-slate-700">
-                <div class="p-4 font-bold text-slate-400 border-r border-slate-700 uppercase text-[10px] tracking-widest flex items-end">Organization View</div>
+                <div class="p-4 font-bold text-slate-400 border-r border-slate-700 uppercase text-[10px] tracking-widest flex items-end">Resources</div>
                 <div class="flex flex-col">
                     <div class="flex border-b border-slate-700/50">
                         <script>
@@ -102,8 +89,184 @@
             <div id="chartBody" class="max-h-[60vh] overflow-y-auto"></div>
         </div>
     </div>
-</div>
 
-<script src="app.js"></script>
+    <script>
+        // DATA STRUCTURES (Simulated JSON files)
+        let users = JSON.parse(localStorage.getItem('users_json')) || [
+            { email: "admin@epic.com", pass: "admin123", name: "System Admin", role: "admin", team: "All" }
+        ];
+        let leaves = JSON.parse(localStorage.getItem('leaves_json')) || [];
+        let currentUser = null;
+        let isSignup = false;
+
+        // AUTH LOGIC
+        function toggleAuthMode() {
+            isSignup = !isSignup;
+            document.getElementById('authTitle').innerText = isSignup ? "Create Account" : "Login";
+            document.getElementById('mainAuthBtn').innerText = isSignup ? "Sign Up" : "Login";
+            document.getElementById('signupFields').classList.toggle('hidden', !isSignup);
+            document.getElementById('toggleText').innerText = isSignup ? "Already have an account?" : "Don't have an account?";
+        }
+
+        function handleAuth() {
+            const email = document.getElementById('authEmail').value;
+            const pass = document.getElementById('authPass').value;
+
+            if (isSignup) {
+                const name = document.getElementById('authName').value;
+                const role = document.getElementById('authRole').value;
+                const team = document.getElementById('authTeam').value;
+                if (!email || !pass || !name) return alert("Fields required");
+                users.push({ email, pass, name, role, team });
+                localStorage.setItem('users_json', JSON.stringify(users));
+                alert("Account created! Please login.");
+                toggleAuthMode();
+            } else {
+                const user = users.find(u => u.email === email && u.pass === pass);
+                if (user) {
+                    currentUser = user;
+                    startDashboard();
+                } else {
+                    alert("Invalid Credentials");
+                }
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('dashboardSection').classList.add('hidden');
+        }
+
+        // DASHBOARD LOGIC
+        function startDashboard() {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            document.getElementById('userWelcome').innerText = `${currentUser.name} (${currentUser.role}) | ${currentUser.team}`;
+
+            // Show management panel if Admin or Manager
+            if (currentUser.role === 'admin' || currentUser.role === 'manager') {
+                document.getElementById('adminControls').classList.remove('hidden');
+            }
+            renderChart();
+        }
+
+        function addLeaveEntry() {
+            const entry = {
+                id: Date.now(),
+                name: document.getElementById('leaveName').value,
+                start: document.getElementById('leaveStart').value,
+                end: document.getElementById('leaveEnd').value,
+                team: currentUser.team,
+                status: 'pending',
+                edited: false,
+                history: null
+            };
+            leaves.push(entry);
+            saveAndRender();
+        }
+
+        function updateLeave(id, newStart, newEnd) {
+            const index = leaves.findIndex(l => l.id === id);
+            const old = {...leaves[index]};
+            
+            leaves[index].history = {
+                prevStart: old.start,
+                prevEnd: old.end,
+                updatedAt: new Date().toLocaleString()
+            };
+            leaves[index].start = newStart;
+            leaves[index].end = newEnd;
+            leaves[index].edited = true;
+            saveAndRender();
+        }
+
+        function approveLeave(id) {
+            const index = leaves.findIndex(l => l.id === id);
+            leaves[index].status = 'approved';
+            saveAndRender();
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('leaves_json', JSON.stringify(leaves));
+            renderChart();
+        }
+
+        function renderChart() {
+            const body = document.getElementById('chartBody');
+            const conflictList = document.getElementById('conflictList');
+            const conflictPanel = document.getElementById('conflictPanel');
+            body.innerHTML = '';
+            conflictList.innerHTML = '';
+            let myConflicts = [];
+
+            // Filter logic based on roles
+            const visibleLeaves = leaves.filter(l => {
+                if (currentUser.role === 'admin') return true;
+                if (currentUser.role === 'manager') return l.team === currentUser.team;
+                return l.name === currentUser.name; // Employee sees own
+            });
+
+            visibleLeaves.forEach(emp => {
+                // Check conflicts (Same team, overlapping dates)
+                const conflicts = leaves.filter(other => 
+                    other.id !== emp.id && 
+                    other.team === emp.team && 
+                    new Date(emp.start) <= new Date(other.end) && new Date(other.start) <= new Date(emp.end)
+                );
+
+                if (emp.name === currentUser.name && conflicts.length > 0) {
+                    conflicts.forEach(c => myConflicts.push(`Overlapping with ${c.name} (${c.start} to ${c.end})`));
+                }
+
+                const start = new Date(emp.start);
+                const end = new Date(emp.end);
+                const left = ((start - new Date('2026-01-01')) / (1000*60*60*24) / 365) * 100;
+                const width = ((end - start) / (1000*60*60*24) / 365) * 100;
+
+                const row = document.createElement('div');
+                row.className = 'gantt-container border-b border-slate-800/40 items-center';
+                
+                // Build HTML with conditional Manager/Employee buttons
+                let controls = '';
+                if (currentUser.role === 'manager' || currentUser.role === 'admin') {
+                    controls = `<button onclick="approveLeave(${emp.id})" class="text-[9px] bg-emerald-500/20 text-emerald-400 px-2 rounded border border-emerald-500/50">${emp.status === 'approved' ? '✓ Approved' : 'Approve'}</button>`;
+                }
+                if (emp.name === currentUser.name) {
+                    controls += `<button onclick="const nS=prompt('New Start', '${emp.start}'); const nE=prompt('New End', '${emp.end}'); if(nS && nE) updateLeave(${emp.id}, nS, nE)" class="ml-1 text-[9px] bg-blue-500/20 text-blue-400 px-2 rounded border border-blue-500/50">Edit</button>`;
+                }
+
+                row.innerHTML = `
+                    <div class="p-3 border-r border-slate-800">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="text-[11px] font-bold text-slate-200">${emp.name} ${emp.edited ? '<span class="text-orange-400 text-[8px]">[EDITED]</span>' : ''}</div>
+                                <div class="text-[8px] text-slate-500 uppercase">${emp.team} | Status: ${emp.status}</div>
+                                ${emp.history ? `<div class="text-[7px] text-slate-400 italic">Was: ${emp.history.prevStart} to ${emp.history.prevEnd}</div>` : ''}
+                            </div>
+                            <div class="flex flex-col gap-1">${controls}</div>
+                        </div>
+                    </div>
+                    <div class="relative h-12 w-full flex items-center px-1">
+                        <div class="absolute inset-0 flex pointer-events-none opacity-5">
+                            ${Array(12).fill(0).map(() => `<div class="flex-1 border-r border-slate-700"></div>`).join('')}
+                        </div>
+                        <div class="absolute h-6 rounded flex items-center px-2 shadow-lg"
+                             style="left: ${left}%; width: ${width}%; background: ${emp.status === 'approved' ? 'linear-gradient(90deg, #065f46, #10b981)' : 'linear-gradient(90deg, #1e293b, #334155)'}; border: 1px solid ${conflicts.length > 0 ? '#ef4444' : 'transparent'}">
+                            <span class="text-[8px] font-black text-white truncate uppercase">${conflicts.length > 0 ? '⚠️ CONFLICT' : 'PLANNED'}</span>
+                        </div>
+                    </div>
+                `;
+                body.appendChild(row);
+            });
+
+            if (myConflicts.length > 0) {
+                conflictPanel.classList.remove('hidden');
+                conflictList.innerHTML = myConflicts.map(m => `<div>${m}</div>`).join('');
+            } else {
+                conflictPanel.classList.add('hidden');
+            }
+        }
+    </script>
 </body>
 </html>
