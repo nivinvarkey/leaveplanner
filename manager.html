@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manager Leave</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="styles.css">
+<script src="scripts.js"></script>
+</head>
+<body class="p-6">
+<h1 class="text-2xl font-bold text-emerald-400 mb-4">Manager Dashboard</h1>
+<div id="loginPanel">
+    <input id="mgrId" placeholder="Manager ID" class="p-2 rounded bg-slate-800 text-white">
+    <input id="mgrPass" placeholder="Password" type="password" class="p-2 rounded bg-slate-800 text-white">
+    <button onclick="managerLogin()" class="bg-emerald-600 px-4 py-2 rounded font-bold">Login</button>
+</div>
+<div id="dashboard" class="hidden">
+    <h2 id="deptName" class="text-xl font-bold mt-4"></h2>
+    <div id="chartBody" class="mt-4 max-h-[60vh] overflow-y-auto"></div>
+</div>
+<script>
+function managerLogin(){
+    const id=document.getElementById('mgrId').value;
+    const pass=document.getElementById('mgrPass').value;
+    const dept=loginManager(id,pass);
+    if(!dept){alert("Invalid");return;}
+    document.getElementById('loginPanel').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    document.getElementById('deptName').innerText=`Department: ${dept}`;
+    renderManager(dept);
+}
+</script>
+</body>
+</html>
