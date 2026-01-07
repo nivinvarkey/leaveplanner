@@ -1,143 +1,162 @@
-/* ============================================
-File: app.js
-Description: Main JS for Leave Planner 2026 - Hybrid Calendar + Gantt + Conflict
-============================================ */
+const PASS = "leave";
+const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
-// APP CORE
-class LeavePlannerApp {
-    constructor() {
-        this.employees = [];
-        this.ganttEngine = new GanttEngine(this);
-        this.conflictEngine = new ConflictEngine(this);
-        this.calendar = new CalendarRenderer(this);
-        this.loadEmployees();
-    }
+let DEFAULT_DATA = [];
+fetch('employees.json').then(res => res.json()).then(data => {
+    DEFAULT_DATA = data;
+    leaveData = JSON.parse(localStorage.getItem('epicLeaveDB')) || DEFAULT_DATA;
+    render();
+});
 
-    async loadEmployees() {
-        const response = await fetch('employees.json');
-        this.employees = await response.json();
-        this.render();
-    }
+let leaveData = [];
 
-    render() {
-        document.getElementById('app').innerHTML = '';
-        this.calendar.renderCalendar(2026);
-        this.conflictEngine.update();
-        this.ganttEngine.bindEvents();
-    }
-}
-
-// CALENDAR RENDERER
-class CalendarRenderer {
-    constructor(app) { this.app = app; }
-
-    renderCalendar(year) {
-        const container = document.getElementById('app');
-        const monthsWrapper = document.createElement('div');
-        monthsWrapper.className = 'grid grid-cols-3 gap-6';
-
-        for (let m=0;m<12;m++) {
-            const monthBox = document.createElement('div');
-            monthBox.className='border p-3 rounded-xl cursor-pointer hover:shadow-lg';
-            monthBox.innerHTML=`<h3 class='font-semibold mb-2'>${this.getMonthName(m)}</h3>`;
-            monthBox.addEventListener('click',()=>this.openMonthDetail(year,m));
-            monthsWrapper.appendChild(monthBox);
+function toggleAdmin() {
+    if(document.body.classList.contains('admin-mode')){
+        document.body.classList.remove('admin-mode');
+        document.getElementById('adminBtn').innerText = "Admin Login";
+    } else {
+        if(prompt("Enter Password:")===PASS){
+            document.body.classList.add('admin-mode');
+            document.getElementById('adminBtn').innerText = "Logout Admin";
         }
-        container.appendChild(monthsWrapper);
     }
+    render();
+}
 
-    openMonthDetail(year, monthIndex){
-        const modal = document.createElement('div');
-        modal.className='modal';
-        const box = document.createElement('div');
-        box.className='modal-box';
-        box.innerHTML=`<h2 class='text-xl font-bold mb-4'>${this.getMonthName(monthIndex)} ${year}</h2>`;
+function saveEntry(){
+    const idx = parseInt(document.getElementById('editIndex').value);
+    const entry = {
+        name: document.getElementById('newName').value,
+        role: document.getElementById('newRole').value,
+        team: document.getElementById('newTeam').value,
+        start: document.getElementById('newStart').value,
+        end: document.getElementById('newEnd').value,
+        remark: "PLANNED"
+    };
+    if(!entry.name||!entry.start||!entry.end) return alert("Missing fields");
+    if(new Date(entry.start) > new Date(entry.end)) return alert("Start date cannot be after end date");
+    if(idx===-1) leaveData.push(entry); else leaveData[idx]=entry;
+    document.getElementById('editIndex').value="-1";
+    document.getElementById('formTitle').innerText="Add New Leave Entry";
+    document.getElementById('saveBtn').innerText="SAVE ENTRY";
+    document.getElementById('newName').value='';
+    saveAndRender();
+}
 
-        const grid = document.createElement('div');
-        grid.className='calendar-detail-grid grid grid-cols-7 gap-2 text-center text-sm';
+function editEntry(index){
+    const emp = leaveData[index];
+    document.getElementById('newName').value=emp.name;
+    document.getElementById('newRole').value=emp.role;
+    document.getElementById('newTeam').value=emp.team;
+    document.getElementById('newStart').value=emp.start;
+    document.getElementById('newEnd').value=emp.end;
+    document.getElementById('editIndex').value=index;
+    document.getElementById('formTitle').innerText="Editing: "+emp.name;
+    document.getElementById('saveBtn').innerText="UPDATE ENTRY";
+    window.scrollTo({top:0,behavior:'smooth'});
+}
 
-        const days = new Date(year, monthIndex+1,0).getDate();
-        for(let d=1;d<=days;d++){
-            const dayCell=document.createElement('div');
-            dayCell.className='day-cell';
-            dayCell.textContent=d;
-            dayCell.dataset.date=`${year}-${monthIndex+1}-${d}`;
-            grid.appendChild(dayCell);
+function removeEntry(index){
+    if(confirm(`Delete ${leaveData[index].name}'s record?`)){
+        leaveData.splice(index,1);
+        saveAndRender();
+    }
+}
+
+function resetData(){
+    if(confirm("This will delete all custom changes. Revert to original?")){
+        leaveData = [...DEFAULT_DATA];
+        saveAndRender();
+    }
+}
+
+function saveAndRender(){
+    localStorage.setItem('epicLeaveDB',JSON.stringify(leaveData));
+    render();
+}
+
+function getOverlaps(current, all){
+    return all.filter(other=>{
+        if(current===other) return false;
+        if(current.team!==other.team || current.role!==other.role) return false;
+        return new Date(current.start)<=new Date(other.end) && new Date(other.start)<=new Date(current.end);
+    });
+}
+
+function calculateAvailability(){
+    const teams = [...new Set(leaveData.map(e=>e.team))];
+    const stats = document.getElementById('availabilityStats');
+    stats.innerHTML='';
+    teams.forEach(team=>{
+        const teamMembers = leaveData.filter(e=>e.team===team).length + 5;
+        const monthLeaves = Array(12).fill(0);
+        leaveData.filter(e=>e.team===team).forEach(emp=>{
+            const start = new Date(emp.start).getMonth();
+            const end = new Date(emp.end).getMonth();
+            for(let i=start;i<=end;i++) monthLeaves[i]++;
+        });
+        let teamHtml=`<div class="mb-4"><h4 class="text-[11px] font-black text-emerald-500">${team}</h4><div class="flex gap-1 mt-1">`;
+        monthLeaves.forEach((leaves,i)=>{
+            const avail = Math.max(0,100-(leaves*20));
+            teamHtml+=`<div class="flex-1 h-8 flex flex-col items-center justify-center rounded bg-slate-800 border border-slate-700">
+                <span class="text-[7px] text-slate-500">${months[i][0]}</span>
+                <span class="text-[9px] font-bold ${avail<70?'text-red-500':'text-emerald-400'}">${avail}%</span>
+            </div>`;
+        });
+        teamHtml+=`</div></div>`;
+        stats.innerHTML+=teamHtml;
+    });
+}
+
+function render(){
+    const teamFilter=document.getElementById('teamFilter').value;
+    const search=document.getElementById('nameSearch').value.toLowerCase();
+    const body=document.getElementById('chartBody');
+    const confPanel=document.getElementById('conflictPanel');
+    const confList=document.getElementById('conflictList');
+    body.innerHTML=''; confList.innerHTML=''; let hasConflicts=false;
+    leaveData.forEach((emp,index)=>{
+        const conflicts=getOverlaps(emp,leaveData);
+        const isConflicted=conflicts.length>0;
+        if(isConflicted){ hasConflicts=true;
+            if(!confList.innerHTML.includes(emp.name)){
+                confList.innerHTML+=`<div class="bg-red-950/40 p-2 rounded text-[10px] border border-red-800 flex justify-between">
+                    <span><strong>${emp.name}</strong> clashes with ${conflicts[0].name}</span>
+                </div>`;
+            }
         }
-
-        const closeBtn=document.createElement('button');
-        closeBtn.textContent='Close';
-        closeBtn.className='mt-4 px-4 py-2 bg-red-500 text-white rounded';
-        closeBtn.addEventListener('click',()=>modal.remove());
-
-        box.appendChild(grid); box.appendChild(closeBtn); modal.appendChild(box);
-        document.body.appendChild(modal);
-
-        // Render leave bars
-        this.app.ganttEngine.renderLeaveBars(monthIndex,year);
-    }
-
-    getMonthName(m){ return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m]; }
+        if((teamFilter==='All'||emp.team===teamFilter)&&emp.name.toLowerCase().includes(search)){
+            const start=new Date(emp.start), end=new Date(emp.end);
+            const left=((start-new Date('2026-01-01'))/(1000*60*60*24)/365)*100;
+            const width=((end-start)/(1000*60*60*24)/365)*100;
+            const row=document.createElement('div');
+            row.className='gantt-container border-b border-slate-800/40 items-center transition-colors hover:bg-slate-800/20';
+            row.innerHTML=`
+            <div class="p-3 border-r border-slate-800 flex justify-between items-center group">
+                <div>
+                    <div class="text-[11px] font-bold ${isConflicted?'text-red-500':'text-slate-200'}">${emp.name}</div>
+                    <div class="text-[8px] text-slate-500 uppercase font-black">${emp.role}</div>
+                </div>
+                <div class="admin-only flex gap-2">
+                    <button onclick="editEntry(${index})" class="text-blue-400 hover:text-white transition-colors">✏️</button>
+                    <button onclick="removeEntry(${index})" class="text-red-500 hover:text-white transition-colors">✕</button>
+                </div>
+            </div>
+            <div class="relative h-12 w-full flex items-center px-1">
+                <div class="absolute inset-0 flex pointer-events-none opacity-5">
+                    ${Array(12).fill(0).map(()=>`<div class="flex-1 border-r border-slate-400"></div>`).join('')}
+                </div>
+                <div class="leave-bar absolute h-7 rounded-md border border-white/10 shadow-lg flex items-center px-3 group cursor-help transition-all hover:scale-[1.01]"
+                    style="left:${left}%; width:${width}%; background:${isConflicted?'linear-gradient(to right,#7f1d1d,#ef4444)':'linear-gradient(to right,#064e3b,#10b981)'}">
+                    <span class="text-[8px] font-black text-white truncate uppercase">${isConflicted?'⚠️ CONFLICT':(emp.remark||'VACATION')}</span>
+                    <div class="tooltip hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white text-slate-900 text-[10px] font-bold p-2 rounded shadow-2xl z-50 whitespace-nowrap">
+                        ${emp.name} (${emp.team})<br/>${emp.start} TO ${emp.end}
+                    </div>
+                </div>
+            </div>`;
+            body.appendChild(row);
+        }
+    });
+    confPanel.style.display=hasConflicts?'block':'none';
+    calculateAvailability();
 }
-
-// GANTT ENGINE
-class GanttEngine {
-    constructor(app){ this.app=app; }
-    bindEvents(){ /* handled in CalendarRenderer */ }
-    renderLeaveBars(monthIndex,year){
-        const modalGrid=document.querySelector('.calendar-detail-grid');
-        if(!modalGrid) return;
-        modalGrid.querySelectorAll('.leave-bar').forEach(b=>b.remove());
-        this.app.employees.forEach(emp=>{
-            (emp.leaves||[]).forEach(leave=>{
-                const start=new Date(leave.start), end=new Date(leave.end);
-                if(start.getMonth()<=monthIndex && end.getMonth()>=monthIndex){
-                    const startDay=start.getMonth()===monthIndex?start.getDate():1;
-                    const endDay=end.getMonth()===monthIndex?end.getDate():new Date(year,monthIndex+1,0).getDate();
-                    for(let d=startDay;d<=endDay;d++){
-                        const cell=modalGrid.querySelector(`.day-cell[data-date='${year}-${monthIndex+1}-${d}']`);
-                        if(cell){
-                            const bar=document.createElement('div');
-                            bar.className='leave-bar';
-                            bar.title=`${emp.name}: ${leave.start} → ${leave.end}`;
-                            cell.appendChild(bar);
-                        }
-                    }
-                }
-            });
-        });
-    }
-}
-
-// CONFLICT ENGINE
-class ConflictEngine{
-    constructor(app){ this.app=app; this.conflictPanel=null; }
-    calculateConflicts(){
-        if(!this.conflictPanel){
-            this.conflictPanel=document.createElement('div');
-            this.conflictPanel.className='conflict-panel';
-            const title=document.createElement('h3'); title.textContent='⚠️ Conflicts / Low Availability'; title.className='font-bold mb-3';
-            this.list=document.createElement('div'); this.conflictPanel.appendChild(title); this.conflictPanel.appendChild(this.list);
-            document.getElementById('app').appendChild(this.conflictPanel);
-        }else{this.list.innerHTML='';}
-        const allLeaves=[];
-        this.app.employees.forEach(emp=>(emp.leaves||[]).forEach(l=>allLeaves.push({emp,start:new Date(l.start),end:new Date(l.end)})));
-        const teams=[...new Set(this.app.employees.map(e=>e.team))];
-        teams.forEach(team=>{
-            const teamEmps=this.app.employees.filter(e=>e.team===team);
-            teamEmps.forEach(emp=>{
-                (emp.leaves||[]).forEach(leave=>{
-                    const conflicts=allLeaves.filter(o=>o.emp.id!==emp.id && o.emp.team===emp.team && leave.start<=o.end && o.start<=leave.end);
-                    conflicts.forEach(c=>{
-                        const div=document.createElement('div'); div.textContent=`${emp.name} overlaps with ${c.emp.name} (${emp.team})`; div.className='text-red-600 text-sm mb-1';
-                        this.list.appendChild(div);
-                    });
-                });
-            });
-        });
-    }
-    update(){this.calculateConflicts();}
-}
-
-// START APP
-window.addEventListener('DOMContentLoaded',()=>{new LeavePlannerApp();});
