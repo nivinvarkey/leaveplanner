@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Epic Piping: Leave Manager Pro 2026</title>
+    <title>Epic Piping | Admin Leave Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
-        .gantt-container { display: grid; grid-template-columns: 320px 1fr; }
+        .gantt-container { display: grid; grid-template-columns: 350px 1fr; }
         .week-segment { flex: 1; border-right: 1px solid #1e293b; font-size: 8px; text-align: center; padding-top: 4px; color: #475569; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
@@ -18,245 +18,241 @@
 <body class="p-4 md:p-6">
 
     <div id="authSection" class="max-w-md mx-auto mt-20 bg-slate-900 p-8 rounded-2xl border border-slate-800 shadow-2xl">
-        <h2 id="authTitle" class="text-2xl font-bold text-emerald-400 mb-6 text-center">Login</h2>
+        <h2 class="text-2xl font-bold text-emerald-400 mb-6 text-center">EPIC PIPING LOGIN</h2>
         <div class="space-y-4">
-            <input type="email" id="authEmail" placeholder="Email Address" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none focus:border-emerald-500">
-            <input type="password" id="authPass" placeholder="Password" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none focus:border-emerald-500">
-            
-            <div id="signupFields" class="hidden space-y-4">
-                <input type="text" id="authName" placeholder="Full Name" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none focus:border-emerald-500">
-                <select id="authRole" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none">
-                    <option value="employee">Employee</option>
-                    <option value="manager">Department Manager</option>
-                </select>
-                <select id="authTeam" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none">
-                    <option>Team B</option><option>Team C</option><option>Support Team</option><option>DC Team</option><option>Material Team</option>
-                </select>
+            <div>
+                <label class="text-xs text-slate-500 uppercase font-bold mb-1 block">Username</label>
+                <input type="text" id="authUser" placeholder="Enter Username" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500">
             </div>
-
-            <button onclick="handleAuth()" id="mainAuthBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded transition-all">Login</button>
-            <p class="text-center text-sm text-slate-500">
-                <span id="toggleText">Don't have an account?</span> 
-                <button onclick="toggleAuthMode()" class="text-emerald-400 hover:underline">Sign up here</button>
-            </p>
+            <div>
+                <label class="text-xs text-slate-500 uppercase font-bold mb-1 block">Password</label>
+                <input type="password" id="authPass" placeholder="••••••••" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500">
+            </div>
+            <button onclick="handleLogin()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg transition-all">Enter System</button>
+            <p class="text-[10px] text-center text-slate-600 italic">Default Admin: admin / admin123</p>
         </div>
     </div>
 
-    <div id="dashboardSection" class="hidden max-w-[1650px] mx-auto">
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <div id="dashboardSection" class="hidden max-w-[1700px] mx-auto">
+        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-emerald-400 tracking-tight">ANNUAL LEAVE PLAN - 2026</h1>
-                <p id="userWelcome" class="text-slate-500 text-sm font-medium"></p>
+                <h1 class="text-2xl font-bold text-emerald-400 tracking-tight">ANNUAL LEAVE PLANNER - 2026</h1>
+                <p id="userWelcome" class="text-slate-500 text-sm"></p>
             </div>
-            <div class="flex gap-3">
-                <button onclick="logout()" class="bg-slate-800 hover:bg-red-900/40 text-slate-300 px-4 py-2 rounded text-sm border border-slate-700 transition-all">Logout</button>
-            </div>
+            <button onclick="logout()" class="bg-slate-800 hover:bg-red-900/40 text-slate-300 px-4 py-2 rounded-lg text-xs border border-slate-700">Logout</button>
         </header>
 
-        <div id="controlPanel" class="mb-6 p-5 rounded-xl border bg-slate-900/50 backdrop-blur-sm">
-            <h3 id="panelTitle" class="font-bold text-xs uppercase mb-4 tracking-widest text-emerald-400"></h3>
+        <div id="adminPanel" class="hidden mb-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-slate-900 border border-emerald-500/20 p-5 rounded-xl">
+                <h3 class="text-emerald-400 font-bold text-xs uppercase mb-4">Department & Manager Setup</h3>
+                <div class="flex gap-2 mb-4">
+                    <input type="text" id="deptInput" placeholder="New Dept Name" class="flex-1 bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+                    <button onclick="addDept()" class="bg-emerald-600 px-4 py-2 rounded text-xs font-bold">Add Dept</button>
+                </div>
+                <div id="deptList" class="space-y-2 max-h-40 overflow-y-auto"></div>
+            </div>
+
+            <div class="bg-slate-900 border border-emerald-500/20 p-5 rounded-xl">
+                <h3 class="text-emerald-400 font-bold text-xs uppercase mb-4">Create Employee/Manager</h3>
+                <div class="grid grid-cols-2 gap-2 mb-2">
+                    <input type="text" id="regUser" placeholder="Username" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+                    <input type="text" id="regName" placeholder="Full Name" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <select id="regRole" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+                        <option value="employee">Employee</option>
+                        <option value="manager">Manager</option>
+                    </select>
+                    <select id="regDept" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none"></select>
+                </div>
+                <button onclick="createUser()" class="w-full bg-blue-600 py-2 rounded text-xs font-bold">Register User</button>
+            </div>
+        </div>
+
+        <div id="applyPanel" class="hidden mb-6 bg-slate-900/50 p-6 rounded-xl border border-slate-800">
+            <h3 class="text-xs font-bold uppercase text-emerald-400 mb-4">Submit Leave Plan</h3>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="flex flex-col gap-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Name</label>
-                    <input type="text" id="leaveName" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500" readonly>
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">Start Date</label>
-                    <input type="date" id="leaveStart" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500">
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label class="text-[10px] text-slate-500 uppercase font-bold">End Date</label>
-                    <input type="date" id="leaveEnd" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500">
-                </div>
-                <div class="flex items-end">
-                    <button onclick="addLeaveEntry()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded text-sm transition-all shadow-lg">
-                        Submit Leave Application
-                    </button>
-                </div>
+                <input type="text" id="leaveUser" class="bg-slate-800 border border-slate-700 p-2.5 rounded text-sm outline-none" readonly>
+                <input type="date" id="leaveStart" class="bg-slate-800 border border-slate-700 p-2.5 rounded text-sm">
+                <input type="date" id="leaveEnd" class="bg-slate-800 border border-slate-700 p-2.5 rounded text-sm">
+                <button onclick="submitLeave()" class="bg-emerald-600 font-bold rounded py-2 transition-all">Apply Dates</button>
             </div>
         </div>
 
         <div id="conflictPanel" class="hidden mb-6 bg-red-950/20 border border-red-900/40 rounded-xl p-4">
-            <h2 class="text-red-500 font-bold text-xs uppercase mb-3 flex items-center gap-2">⚠️ Conflict Warning</h2>
-            <div id="conflictList" class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-red-300/80"></div>
+            <h2 class="text-red-500 font-bold text-xs mb-2 uppercase">⚠️ Overlap Alerts</h2>
+            <div id="conflictList" class="text-xs text-red-300 grid grid-cols-1 md:grid-cols-2 gap-2"></div>
         </div>
 
         <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
             <div class="gantt-container bg-slate-800/40 border-b border-slate-700">
-                <div class="p-4 font-bold text-slate-400 border-r border-slate-700 uppercase text-[10px] tracking-widest flex items-end">Team Resources</div>
+                <div class="p-4 font-bold text-slate-500 uppercase text-[10px] tracking-widest flex items-end border-r border-slate-700">Department Resources</div>
                 <div class="flex flex-col">
                     <div class="flex border-b border-slate-700/50">
                         <script>
                             ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].forEach(m => 
-                                document.write(`<div class="flex-1 text-center py-2 text-[10px] font-bold uppercase border-r border-slate-700/50 text-slate-400">${m}</div>`));
-                        </script>
-                    </div>
-                    <div class="flex">
-                        <script>
-                            for(let i=0; i<12; i++) {
-                                document.write('<div class="flex-1 flex border-r border-slate-700/30">');
-                                for(let j=1; j<=4; j++) document.write(`<div class="week-segment">W${j}</div>`);
-                                document.write('</div>');
-                            }
+                                document.write(`<div class="flex-1 text-center py-3 text-[10px] font-bold uppercase border-r border-slate-700/50 text-slate-400">${m}</div>`));
                         </script>
                     </div>
                 </div>
             </div>
-            <div id="chartBody" class="max-h-[55vh] overflow-y-auto"></div>
+            <div id="chartBody" class="max-h-[50vh] overflow-y-auto"></div>
         </div>
     </div>
 
     <script>
-        // --- DATA PERSISTENCE (Simulating separate JSON files) ---
-        let users = JSON.parse(localStorage.getItem('users_db')) || [
-            { email: "admin@epic.com", pass: "admin123", name: "System Admin", role: "admin", team: "All" }
-        ];
-        let leaves = JSON.parse(localStorage.getItem('leaves_db')) || [];
-        let currentUser = null;
-        let isSignup = false;
+        // --- DATA STORE ---
+        let db = JSON.parse(localStorage.getItem('epic_db')) || {
+            users: [{ user: "admin", pass: "admin123", name: "System Admin", role: "admin", dept: "Global" }],
+            depts: ["Team B", "Team C", "Support Team", "DC Team"],
+            leaves: []
+        };
 
-        // --- AUTH FUNCTIONS ---
-        function toggleAuthMode() {
-            isSignup = !isSignup;
-            document.getElementById('authTitle').innerText = isSignup ? "Create Account" : "Login";
-            document.getElementById('mainAuthBtn').innerText = isSignup ? "Sign Up" : "Login";
-            document.getElementById('signupFields').classList.toggle('hidden', !isSignup);
-            document.getElementById('toggleText').innerText = isSignup ? "Already have an account?" : "Don't have an account?";
-        }
+        let currentSession = null;
 
-        function handleAuth() {
-            const email = document.getElementById('authEmail').value;
-            const pass = document.getElementById('authPass').value;
-
-            if (isSignup) {
-                const name = document.getElementById('authName').value;
-                const role = document.getElementById('authRole').value;
-                const team = document.getElementById('authTeam').value;
-                if (!email || !pass || !name) return alert("All fields are required");
-                users.push({ email, pass, name, role, team });
-                localStorage.setItem('users_db', JSON.stringify(users));
-                alert("Account created successfully!");
-                toggleAuthMode();
-            } else {
-                const user = users.find(u => u.email === email && u.pass === pass);
-                if (user) {
-                    currentUser = user;
-                    startDashboard();
-                } else { alert("Invalid email or password"); }
-            }
+        // --- AUTH ---
+        function handleLogin() {
+            const u = document.getElementById('authUser').value;
+            const p = document.getElementById('authPass').value;
+            const account = db.users.find(x => x.user === u && x.pass === p);
+            
+            if(account) {
+                currentSession = account;
+                initDashboard();
+            } else { alert("Wrong username/password"); }
         }
 
         function logout() {
-            currentUser = null;
+            currentSession = null;
             document.getElementById('authSection').classList.remove('hidden');
             document.getElementById('dashboardSection').classList.add('hidden');
         }
 
-        // --- DASHBOARD CORE ---
-        function startDashboard() {
+        // --- DASHBOARD INIT ---
+        function initDashboard() {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('dashboardSection').classList.remove('hidden');
-            document.getElementById('userWelcome').innerText = `${currentUser.name} | ${currentUser.role.toUpperCase()} | ${currentUser.team}`;
-
-            const nameInput = document.getElementById('leaveName');
-            const panelTitle = document.getElementById('panelTitle');
+            document.getElementById('userWelcome').innerText = `${currentSession.name} (${currentSession.role.toUpperCase()}) | ${currentSession.dept}`;
             
-            if (currentUser.role === 'employee') {
-                panelTitle.innerText = "Employee Leave Application";
-                nameInput.value = currentUser.name;
-                nameInput.readOnly = true;
-            } else {
-                panelTitle.innerText = "Management: Resource Planning";
-                nameInput.readOnly = false;
-                nameInput.placeholder = "Search Staff Name";
+            // Toggle visibility
+            document.getElementById('adminPanel').classList.toggle('hidden', currentSession.role !== 'admin');
+            document.getElementById('applyPanel').classList.toggle('hidden', currentSession.role === 'admin');
+            
+            if(currentSession.role !== 'admin') {
+                document.getElementById('leaveUser').value = currentSession.name;
             }
+
+            renderAdminTools();
             renderChart();
         }
 
-        function addLeaveEntry() {
-            const name = document.getElementById('leaveName').value;
-            const start = document.getElementById('leaveStart').value;
-            const end = document.getElementById('leaveEnd').value;
-
-            if (!name || !start || !end) return alert("Fill all fields");
-
-            const entry = {
-                id: Date.now(),
-                name: name,
-                start: start,
-                end: end,
-                team: currentUser.team,
-                status: 'pending',
-                edited: false,
-                history: null,
-                timestamp: new Date().toLocaleString()
-            };
-
-            leaves.push(entry);
-            saveData();
+        // --- ADMIN ACTIONS ---
+        function addDept() {
+            const name = document.getElementById('deptInput').value;
+            if(name) { db.depts.push(name); save(); renderAdminTools(); }
         }
 
-        function updateLeave(id) {
-            const idx = leaves.findIndex(l => l.id === id);
-            const newStart = prompt("Enter New Start Date (YYYY-MM-DD):", leaves[idx].start);
-            const newEnd = prompt("Enter New End Date (YYYY-MM-DD):", leaves[idx].end);
+        function createUser() {
+            const user = document.getElementById('regUser').value;
+            const name = document.getElementById('regName').value;
+            const role = document.getElementById('regRole').value;
+            const dept = document.getElementById('regDept').value;
+            
+            if(user && name) {
+                db.users.push({ user, pass: "123", name, role, dept }); // Default pass 123
+                save();
+                alert(`User Created! Password is: 123`);
+            }
+        }
 
-            if (newStart && newEnd) {
-                leaves[idx].history = {
-                    prevStart: leaves[idx].start,
-                    prevEnd: leaves[idx].end,
-                    time: new Date().toLocaleString()
-                };
-                leaves[idx].start = newStart;
-                leaves[idx].end = newEnd;
-                leaves[idx].edited = true;
-                saveData();
+        function renderAdminTools() {
+            const dList = document.getElementById('deptList');
+            const dSelect = document.getElementById('regDept');
+            dList.innerHTML = ''; dSelect.innerHTML = '';
+            
+            db.depts.forEach(d => {
+                dList.innerHTML += `<div class="flex justify-between items-center bg-slate-800 p-2 rounded text-xs border border-slate-700">
+                    <span>${d}</span>
+                    <button onclick="removeDept('${d}')" class="text-red-500">✕</button>
+                </div>`;
+                dSelect.innerHTML += `<option>${d}</option>`;
+            });
+        }
+
+        function removeDept(name) {
+            db.depts = db.depts.filter(d => d !== name);
+            save(); renderAdminTools();
+        }
+
+        // --- LEAVE ACTIONS ---
+        function submitLeave() {
+            const start = document.getElementById('leaveStart').value;
+            const end = document.getElementById('leaveEnd').value;
+            if(!start || !end) return;
+
+            db.leaves.push({
+                id: Date.now(),
+                name: currentSession.name,
+                dept: currentSession.dept,
+                start, end,
+                status: 'pending',
+                history: null
+            });
+            save(); renderChart();
+        }
+
+        function editLeave(id) {
+            const idx = db.leaves.findIndex(l => l.id === id);
+            const nS = prompt("New Start Date:", db.leaves[idx].start);
+            const nE = prompt("New End Date:", db.leaves[idx].end);
+            if(nS && nE) {
+                db.leaves[idx].history = { oldS: db.leaves[idx].start, oldE: db.leaves[idx].end };
+                db.leaves[idx].start = nS;
+                db.leaves[idx].end = nE;
+                save(); renderChart();
             }
         }
 
         function approveLeave(id) {
-            const idx = leaves.findIndex(l => l.id === id);
-            leaves[idx].status = 'approved';
-            saveData();
+            const idx = db.leaves.findIndex(l => l.id === id);
+            db.leaves[idx].status = 'approved';
+            save(); renderChart();
         }
 
         function deleteLeave(id) {
-            if(confirm("Permanently delete this entry?")) {
-                leaves = leaves.filter(l => l.id !== id);
-                saveData();
+            if(confirm("Delete this entry?")) {
+                db.leaves = db.leaves.filter(l => l.id !== id);
+                save(); renderChart();
             }
         }
 
-        function saveData() {
-            localStorage.setItem('leaves_db', JSON.stringify(leaves));
-            renderChart();
+        function save() {
+            localStorage.setItem('epic_db', JSON.stringify(db));
         }
 
-        // --- GANTT RENDERING & CONFLICT LOGIC ---
+        // --- CHART & CONFLICTS ---
         function renderChart() {
             const body = document.getElementById('chartBody');
-            const confList = document.getElementById('conflictList');
-            const confPanel = document.getElementById('conflictPanel');
-            body.innerHTML = ''; confList.innerHTML = '';
-            let conflictsFound = [];
+            const cList = document.getElementById('conflictList');
+            const cPanel = document.getElementById('conflictPanel');
+            body.innerHTML = ''; cList.innerHTML = '';
+            let conflicts = [];
 
-            // Filtering based on Role
-            const visibleData = leaves.filter(l => {
-                if (currentUser.role === 'admin') return true;
-                if (currentUser.role === 'manager') return l.team === currentUser.team;
-                return true; // Employees see the full team schedule to avoid conflicts
+            // Filter logic
+            const visible = db.leaves.filter(l => {
+                if(currentSession.role === 'admin') return true;
+                if(currentSession.role === 'manager') return l.dept === currentSession.dept;
+                return l.dept === currentSession.dept; // Employees see team schedule
             });
 
-            visibleData.forEach(emp => {
-                const overlaps = leaves.filter(other => 
-                    other.id !== emp.id && 
-                    other.team === emp.team && 
-                    new Date(emp.start) <= new Date(other.end) && new Date(other.start) <= new Date(emp.end)
+            visible.forEach(emp => {
+                const overlaps = db.leaves.filter(o => 
+                    o.id !== emp.id && o.dept === emp.dept && 
+                    new Date(emp.start) <= new Date(o.end) && new Date(o.start) <= new Date(emp.end)
                 );
 
-                const isConflicted = overlaps.length > 0;
-                if (isConflicted && emp.name === currentUser.name) {
-                    overlaps.forEach(o => conflictsFound.push(`Your leave clashes with <strong>${o.name}</strong> (${o.start} to ${o.end})`));
+                if(emp.name === currentSession.name && overlaps.length > 0) {
+                    overlaps.forEach(o => conflicts.push(`Conflict with <b>${o.name}</b> (${o.start} to ${o.end})`));
                 }
 
                 const start = new Date(emp.start);
@@ -264,35 +260,33 @@
                 const left = ((start - new Date('2026-01-01')) / (1000*60*60*24) / 365) * 100;
                 const width = ((end - start) / (1000*60*60*24) / 365) * 100;
 
-                const row = document.createElement('div');
-                row.className = 'gantt-container border-b border-slate-800/40 items-center hover:bg-slate-800/20 transition-colors';
+                let row = document.createElement('div');
+                row.className = 'gantt-container border-b border-slate-800/40 items-center';
                 
-                let actionButtons = '';
-                if (currentUser.role === 'admin' || currentUser.role === 'manager') {
-                    actionButtons += `<button onclick="approveLeave(${emp.id})" class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500 hover:text-white transition-all">${emp.status === 'approved' ? '✓ Approved' : 'Approve'}</button>`;
-                    actionButtons += `<button onclick="deleteLeave(${emp.id})" class="ml-1 px-2 py-1 rounded bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500 hover:text-white">✕</button>`;
+                let btns = '';
+                if(currentSession.role === 'admin' || (currentSession.role === 'manager' && emp.dept === currentSession.dept)) {
+                    btns += `<button onclick="approveLeave(${emp.id})" class="text-[9px] px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">${emp.status === 'approved' ? '✓' : 'Approve'}</button>`;
+                    btns += `<button onclick="deleteLeave(${emp.id})" class="ml-1 text-[9px] px-2 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/30">✕</button>`;
                 }
-                if (emp.name === currentUser.name || currentUser.role === 'admin') {
-                    actionButtons += `<button onclick="updateLeave(${emp.id})" class="ml-1 px-2 py-1 rounded bg-blue-500/20 text-blue-400 border border-blue-500/40 hover:bg-blue-500 hover:text-white transition-all">Edit</button>`;
+                if(emp.name === currentSession.name || currentSession.role === 'admin') {
+                    btns += `<button onclick="editLeave(${emp.id})" class="ml-1 text-[9px] px-2 py-1 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">Edit</button>`;
                 }
 
                 row.innerHTML = `
-                    <div class="p-3 border-r border-slate-800 flex justify-between items-center group">
-                        <div class="overflow-hidden">
-                            <div class="text-[11px] font-bold ${isConflicted ? 'text-red-400' : 'text-slate-200'} truncate">
-                                ${emp.name} ${emp.edited ? '<span class="text-orange-400 text-[9px] ml-1">[EDITED]</span>' : ''}
-                            </div>
-                            <div class="text-[8px] text-slate-500 uppercase font-semibold">${emp.team} | ${emp.status}</div>
-                            ${emp.history ? `<div class="text-[7px] text-orange-300/60 mt-1 italic">Was: ${emp.history.prevStart} to ${emp.history.prevEnd} (Changed at ${emp.history.time})</div>` : ''}
+                    <div class="p-3 border-r border-slate-800 flex justify-between items-center overflow-hidden">
+                        <div class="truncate">
+                            <div class="text-[11px] font-bold ${overlaps.length > 0 ? 'text-red-400' : 'text-slate-200'}">${emp.name}</div>
+                            <div class="text-[8px] text-slate-500 uppercase font-bold">${emp.dept} | ${emp.status}</div>
+                            ${emp.history ? `<div class="text-[7px] text-orange-400 mt-1 italic">Was: ${emp.history.oldS} to ${emp.history.oldE}</div>` : ''}
                         </div>
-                        <div class="flex">${actionButtons}</div>
+                        <div class="flex">${btns}</div>
                     </div>
                     <div class="relative h-14 w-full flex items-center px-1">
-                        <div class="leave-bar absolute h-7 rounded shadow-lg flex items-center px-3 group cursor-pointer transition-all hover:scale-[1.01]"
-                             style="left: ${left}%; width: ${width}%; background: ${emp.status === 'approved' ? 'linear-gradient(90deg, #065f46, #10b981)' : 'linear-gradient(90deg, #1e293b, #334155)'}; border: 1.5px solid ${isConflicted ? '#ef4444' : 'transparent'}">
-                            <span class="text-[8px] font-black text-white truncate uppercase tracking-tighter">${isConflicted ? '⚠️ CONFLICT' : (emp.status === 'approved' ? 'READY' : 'PENDING')}</span>
+                        <div class="leave-bar absolute h-7 rounded shadow-xl flex items-center px-3 transition-all hover:scale-[1.01]"
+                             style="left: ${left}%; width: ${width}%; background: ${emp.status === 'approved' ? 'linear-gradient(90deg, #064e3b, #10b981)' : 'linear-gradient(90deg, #1e293b, #334155)'}; border: 1px solid ${overlaps.length > 0 ? '#ef4444' : 'transparent'}">
+                            <span class="text-[8px] font-black text-white truncate uppercase">${overlaps.length > 0 ? '⚠️ CONFLICT' : emp.status}</span>
                             <div class="tooltip hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white text-slate-900 text-[10px] p-2 rounded shadow-2xl z-50 whitespace-nowrap font-bold">
-                                ${emp.name} | ${emp.start} to ${emp.end}
+                                ${emp.start} to ${emp.end}
                             </div>
                         </div>
                     </div>
@@ -300,10 +294,8 @@
                 body.appendChild(row);
             });
 
-            if (conflictsFound.length > 0) {
-                confPanel.classList.remove('hidden');
-                confList.innerHTML = conflictsFound.map(c => `<div class="bg-red-900/20 p-2 rounded border border-red-500/20">${c}</div>`).join('');
-            } else { confPanel.classList.add('hidden'); }
+            cPanel.classList.toggle('hidden', conflicts.length === 0);
+            cList.innerHTML = conflicts.map(c => `<div>${c}</div>`).join('');
         }
     </script>
 </body>
