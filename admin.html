@@ -1,41 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="styles.css">
 <script src="scripts.js"></script>
 </head>
-<body class="p-6">
+<body class="p-6 bg-slate-900 text-slate-200">
+
 <h1 class="text-2xl font-bold text-emerald-400 mb-4">Admin Panel</h1>
-<div id="loginPanel">
-    <input id="adminPass" type="password" placeholder="Admin Password" class="p-2 rounded bg-slate-800 text-white">
-    <button onclick="adminLogin()" class="bg-emerald-600 px-4 py-2 rounded font-bold">Login</button>
+
+<!-- LOGIN PANEL -->
+<div id="loginPanel" class="bg-slate-800 p-6 rounded shadow-md w-80">
+    <h2 class="text-lg font-bold mb-4">Admin Login</h2>
+    <input id="adminPass" type="password" placeholder="Admin Password" class="mb-4 w-full p-2 rounded bg-slate-700 text-white" />
+    <button onclick="adminLogin()" class="w-full bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded font-bold">Login</button>
 </div>
+
+<!-- ADMIN DASHBOARD -->
 <div id="adminDashboard" class="hidden">
+
     <h2 class="text-xl font-bold mt-4">Departments</h2>
     <input id="deptNameInput" placeholder="Department Name" class="p-2 rounded bg-slate-800 text-white">
-    <button onclick="addDepartment(deptNameInput.value)" class="bg-emerald-600 px-2 py-1 rounded">Add Dept</button>
+    <button onclick="addDepartment(deptNameInput.value)" class="bg-emerald-600 px-2 py-1 rounded ml-2">Add Dept</button>
     
     <h2 class="text-xl font-bold mt-4">Teams</h2>
     <input id="teamDeptInput" placeholder="Department" class="p-2 rounded bg-slate-800 text-white">
     <input id="teamNameInput" placeholder="Team Name" class="p-2 rounded bg-slate-800 text-white">
-    <button onclick="addTeam(teamDeptInput.value,teamNameInput.value)" class="bg-emerald-600 px-2 py-1 rounded">Add Team</button>
+    <button onclick="addTeam(teamDeptInput.value, teamNameInput.value)" class="bg-emerald-600 px-2 py-1 rounded ml-2">Add Team</button>
 
     <h2 class="text-xl font-bold mt-4">Managers</h2>
     <input id="mgrIdInput" placeholder="Manager ID" class="p-2 rounded bg-slate-800 text-white">
     <input id="mgrPassInput" placeholder="Password" class="p-2 rounded bg-slate-800 text-white">
     <input id="mgrDeptInput" placeholder="Department" class="p-2 rounded bg-slate-800 text-white">
-    <button onclick="addManager(mgrIdInput.value,mgrPassInput.value,mgrDeptInput.value)" class="bg-emerald-600 px-2 py-1 rounded">Add Manager</button>
+    <button onclick="addManager(mgrIdInput.value, mgrPassInput.value, mgrDeptInput.value)" class="bg-emerald-600 px-2 py-1 rounded ml-2">Add Manager</button>
+
 </div>
+
 <script>
 function adminLogin(){
-    const pass=document.getElementById('adminPass').value;
-    if(!loginAdmin(pass)){alert("Wrong password"); return;}
+    const pass = document.getElementById('adminPass').value.trim();
+    if(!loginAdmin(pass)){ // from scripts.js
+        alert("Incorrect Admin Password!");
+        return;
+    }
     document.getElementById('loginPanel').style.display='none';
     document.getElementById('adminDashboard').style.display='block';
 }
 </script>
+
 </body>
 </html>
