@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Epic Piping: Leave Manager Pro</title>
+    <title>Epic Piping: Leave Manager Pro 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
@@ -12,6 +12,7 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         .hidden { display: none !important; }
+        .leave-bar:hover .tooltip { display: block; }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -26,7 +27,7 @@
                 <input type="text" id="authName" placeholder="Full Name" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none focus:border-emerald-500">
                 <select id="authRole" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none">
                     <option value="employee">Employee</option>
-                    <option value="manager">Manager</option>
+                    <option value="manager">Department Manager</option>
                 </select>
                 <select id="authTeam" class="w-full bg-slate-800 border border-slate-700 p-3 rounded outline-none">
                     <option>Team B</option><option>Team C</option><option>Support Team</option><option>DC Team</option><option>Material Team</option>
@@ -36,38 +37,53 @@
             <button onclick="handleAuth()" id="mainAuthBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded transition-all">Login</button>
             <p class="text-center text-sm text-slate-500">
                 <span id="toggleText">Don't have an account?</span> 
-                <button onclick="toggleAuthMode()" class="text-emerald-400 hover:underline">Click here</button>
+                <button onclick="toggleAuthMode()" class="text-emerald-400 hover:underline">Sign up here</button>
             </p>
         </div>
     </div>
 
     <div id="dashboardSection" class="hidden max-w-[1650px] mx-auto">
-        <header class="flex justify-between items-center mb-8">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-emerald-400">ANNUAL LEAVE PLAN - 2026</h1>
-                <p id="userWelcome" class="text-slate-500 text-sm"></p>
+                <h1 class="text-2xl font-bold text-emerald-400 tracking-tight">ANNUAL LEAVE PLAN - 2026</h1>
+                <p id="userWelcome" class="text-slate-500 text-sm font-medium"></p>
             </div>
-            <button onclick="logout()" class="bg-slate-800 hover:bg-red-900/40 text-slate-300 px-4 py-2 rounded text-sm border border-slate-700 transition-all">Logout</button>
+            <div class="flex gap-3">
+                <button onclick="logout()" class="bg-slate-800 hover:bg-red-900/40 text-slate-300 px-4 py-2 rounded text-sm border border-slate-700 transition-all">Logout</button>
+            </div>
         </header>
 
-        <div id="adminControls" class="hidden mb-6 bg-slate-900 border border-emerald-500/30 p-4 rounded-xl">
-            <h3 class="text-emerald-400 font-bold text-xs uppercase mb-4 tracking-widest">Management Panel</h3>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                <input type="text" id="leaveName" placeholder="Employee Name" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
-                <input type="date" id="leaveStart" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
-                <input type="date" id="leaveEnd" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
-                <button onclick="addLeaveEntry()" class="bg-emerald-600 text-white font-bold rounded text-sm hover:bg-emerald-500">Add Entry</button>
+        <div id="controlPanel" class="mb-6 p-5 rounded-xl border bg-slate-900/50 backdrop-blur-sm">
+            <h3 id="panelTitle" class="font-bold text-xs uppercase mb-4 tracking-widest text-emerald-400"></h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="flex flex-col gap-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Name</label>
+                    <input type="text" id="leaveName" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500" readonly>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">Start Date</label>
+                    <input type="date" id="leaveStart" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500">
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold">End Date</label>
+                    <input type="date" id="leaveEnd" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500">
+                </div>
+                <div class="flex items-end">
+                    <button onclick="addLeaveEntry()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded text-sm transition-all shadow-lg">
+                        Submit Leave Application
+                    </button>
+                </div>
             </div>
         </div>
 
         <div id="conflictPanel" class="hidden mb-6 bg-red-950/20 border border-red-900/40 rounded-xl p-4">
-            <h2 class="text-red-500 font-bold text-xs uppercase mb-3">⚠️ My Overlap Alerts</h2>
-            <div id="conflictList" class="text-xs text-red-400"></div>
+            <h2 class="text-red-500 font-bold text-xs uppercase mb-3 flex items-center gap-2">⚠️ Conflict Warning</h2>
+            <div id="conflictList" class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-red-300/80"></div>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
             <div class="gantt-container bg-slate-800/40 border-b border-slate-700">
-                <div class="p-4 font-bold text-slate-400 border-r border-slate-700 uppercase text-[10px] tracking-widest flex items-end">Resources</div>
+                <div class="p-4 font-bold text-slate-400 border-r border-slate-700 uppercase text-[10px] tracking-widest flex items-end">Team Resources</div>
                 <div class="flex flex-col">
                     <div class="flex border-b border-slate-700/50">
                         <script>
@@ -86,20 +102,20 @@
                     </div>
                 </div>
             </div>
-            <div id="chartBody" class="max-h-[60vh] overflow-y-auto"></div>
+            <div id="chartBody" class="max-h-[55vh] overflow-y-auto"></div>
         </div>
     </div>
 
     <script>
-        // DATA STRUCTURES (Simulated JSON files)
-        let users = JSON.parse(localStorage.getItem('users_json')) || [
+        // --- DATA PERSISTENCE (Simulating separate JSON files) ---
+        let users = JSON.parse(localStorage.getItem('users_db')) || [
             { email: "admin@epic.com", pass: "admin123", name: "System Admin", role: "admin", team: "All" }
         ];
-        let leaves = JSON.parse(localStorage.getItem('leaves_json')) || [];
+        let leaves = JSON.parse(localStorage.getItem('leaves_db')) || [];
         let currentUser = null;
         let isSignup = false;
 
-        // AUTH LOGIC
+        // --- AUTH FUNCTIONS ---
         function toggleAuthMode() {
             isSignup = !isSignup;
             document.getElementById('authTitle').innerText = isSignup ? "Create Account" : "Login";
@@ -116,19 +132,17 @@
                 const name = document.getElementById('authName').value;
                 const role = document.getElementById('authRole').value;
                 const team = document.getElementById('authTeam').value;
-                if (!email || !pass || !name) return alert("Fields required");
+                if (!email || !pass || !name) return alert("All fields are required");
                 users.push({ email, pass, name, role, team });
-                localStorage.setItem('users_json', JSON.stringify(users));
-                alert("Account created! Please login.");
+                localStorage.setItem('users_db', JSON.stringify(users));
+                alert("Account created successfully!");
                 toggleAuthMode();
             } else {
                 const user = users.find(u => u.email === email && u.pass === pass);
                 if (user) {
                     currentUser = user;
                     startDashboard();
-                } else {
-                    alert("Invalid Credentials");
-                }
+                } else { alert("Invalid email or password"); }
             }
         }
 
@@ -138,85 +152,111 @@
             document.getElementById('dashboardSection').classList.add('hidden');
         }
 
-        // DASHBOARD LOGIC
+        // --- DASHBOARD CORE ---
         function startDashboard() {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('dashboardSection').classList.remove('hidden');
-            document.getElementById('userWelcome').innerText = `${currentUser.name} (${currentUser.role}) | ${currentUser.team}`;
+            document.getElementById('userWelcome').innerText = `${currentUser.name} | ${currentUser.role.toUpperCase()} | ${currentUser.team}`;
 
-            // Show management panel if Admin or Manager
-            if (currentUser.role === 'admin' || currentUser.role === 'manager') {
-                document.getElementById('adminControls').classList.remove('hidden');
+            const nameInput = document.getElementById('leaveName');
+            const panelTitle = document.getElementById('panelTitle');
+            
+            if (currentUser.role === 'employee') {
+                panelTitle.innerText = "Employee Leave Application";
+                nameInput.value = currentUser.name;
+                nameInput.readOnly = true;
+            } else {
+                panelTitle.innerText = "Management: Resource Planning";
+                nameInput.readOnly = false;
+                nameInput.placeholder = "Search Staff Name";
             }
             renderChart();
         }
 
         function addLeaveEntry() {
+            const name = document.getElementById('leaveName').value;
+            const start = document.getElementById('leaveStart').value;
+            const end = document.getElementById('leaveEnd').value;
+
+            if (!name || !start || !end) return alert("Fill all fields");
+
             const entry = {
                 id: Date.now(),
-                name: document.getElementById('leaveName').value,
-                start: document.getElementById('leaveStart').value,
-                end: document.getElementById('leaveEnd').value,
+                name: name,
+                start: start,
+                end: end,
                 team: currentUser.team,
                 status: 'pending',
                 edited: false,
-                history: null
+                history: null,
+                timestamp: new Date().toLocaleString()
             };
+
             leaves.push(entry);
-            saveAndRender();
+            saveData();
         }
 
-        function updateLeave(id, newStart, newEnd) {
-            const index = leaves.findIndex(l => l.id === id);
-            const old = {...leaves[index]};
-            
-            leaves[index].history = {
-                prevStart: old.start,
-                prevEnd: old.end,
-                updatedAt: new Date().toLocaleString()
-            };
-            leaves[index].start = newStart;
-            leaves[index].end = newEnd;
-            leaves[index].edited = true;
-            saveAndRender();
+        function updateLeave(id) {
+            const idx = leaves.findIndex(l => l.id === id);
+            const newStart = prompt("Enter New Start Date (YYYY-MM-DD):", leaves[idx].start);
+            const newEnd = prompt("Enter New End Date (YYYY-MM-DD):", leaves[idx].end);
+
+            if (newStart && newEnd) {
+                leaves[idx].history = {
+                    prevStart: leaves[idx].start,
+                    prevEnd: leaves[idx].end,
+                    time: new Date().toLocaleString()
+                };
+                leaves[idx].start = newStart;
+                leaves[idx].end = newEnd;
+                leaves[idx].edited = true;
+                saveData();
+            }
         }
 
         function approveLeave(id) {
-            const index = leaves.findIndex(l => l.id === id);
-            leaves[index].status = 'approved';
-            saveAndRender();
+            const idx = leaves.findIndex(l => l.id === id);
+            leaves[idx].status = 'approved';
+            saveData();
         }
 
-        function saveAndRender() {
-            localStorage.setItem('leaves_json', JSON.stringify(leaves));
+        function deleteLeave(id) {
+            if(confirm("Permanently delete this entry?")) {
+                leaves = leaves.filter(l => l.id !== id);
+                saveData();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('leaves_db', JSON.stringify(leaves));
             renderChart();
         }
 
+        // --- GANTT RENDERING & CONFLICT LOGIC ---
         function renderChart() {
             const body = document.getElementById('chartBody');
-            const conflictList = document.getElementById('conflictList');
-            const conflictPanel = document.getElementById('conflictPanel');
-            body.innerHTML = '';
-            conflictList.innerHTML = '';
-            let myConflicts = [];
+            const confList = document.getElementById('conflictList');
+            const confPanel = document.getElementById('conflictPanel');
+            body.innerHTML = ''; confList.innerHTML = '';
+            let conflictsFound = [];
 
-            // Filter logic based on roles
-            const visibleLeaves = leaves.filter(l => {
+            // Filtering based on Role
+            const visibleData = leaves.filter(l => {
                 if (currentUser.role === 'admin') return true;
                 if (currentUser.role === 'manager') return l.team === currentUser.team;
-                return l.name === currentUser.name; // Employee sees own
+                return true; // Employees see the full team schedule to avoid conflicts
             });
 
-            visibleLeaves.forEach(emp => {
-                // Check conflicts (Same team, overlapping dates)
-                const conflicts = leaves.filter(other => 
+            visibleData.forEach(emp => {
+                const overlaps = leaves.filter(other => 
                     other.id !== emp.id && 
                     other.team === emp.team && 
                     new Date(emp.start) <= new Date(other.end) && new Date(other.start) <= new Date(emp.end)
                 );
 
-                if (emp.name === currentUser.name && conflicts.length > 0) {
-                    conflicts.forEach(c => myConflicts.push(`Overlapping with ${c.name} (${c.start} to ${c.end})`));
+                const isConflicted = overlaps.length > 0;
+                if (isConflicted && emp.name === currentUser.name) {
+                    overlaps.forEach(o => conflictsFound.push(`Your leave clashes with <strong>${o.name}</strong> (${o.start} to ${o.end})`));
                 }
 
                 const start = new Date(emp.start);
@@ -225,47 +265,45 @@
                 const width = ((end - start) / (1000*60*60*24) / 365) * 100;
 
                 const row = document.createElement('div');
-                row.className = 'gantt-container border-b border-slate-800/40 items-center';
+                row.className = 'gantt-container border-b border-slate-800/40 items-center hover:bg-slate-800/20 transition-colors';
                 
-                // Build HTML with conditional Manager/Employee buttons
-                let controls = '';
-                if (currentUser.role === 'manager' || currentUser.role === 'admin') {
-                    controls = `<button onclick="approveLeave(${emp.id})" class="text-[9px] bg-emerald-500/20 text-emerald-400 px-2 rounded border border-emerald-500/50">${emp.status === 'approved' ? '✓ Approved' : 'Approve'}</button>`;
+                let actionButtons = '';
+                if (currentUser.role === 'admin' || currentUser.role === 'manager') {
+                    actionButtons += `<button onclick="approveLeave(${emp.id})" class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500 hover:text-white transition-all">${emp.status === 'approved' ? '✓ Approved' : 'Approve'}</button>`;
+                    actionButtons += `<button onclick="deleteLeave(${emp.id})" class="ml-1 px-2 py-1 rounded bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500 hover:text-white">✕</button>`;
                 }
-                if (emp.name === currentUser.name) {
-                    controls += `<button onclick="const nS=prompt('New Start', '${emp.start}'); const nE=prompt('New End', '${emp.end}'); if(nS && nE) updateLeave(${emp.id}, nS, nE)" class="ml-1 text-[9px] bg-blue-500/20 text-blue-400 px-2 rounded border border-blue-500/50">Edit</button>`;
+                if (emp.name === currentUser.name || currentUser.role === 'admin') {
+                    actionButtons += `<button onclick="updateLeave(${emp.id})" class="ml-1 px-2 py-1 rounded bg-blue-500/20 text-blue-400 border border-blue-500/40 hover:bg-blue-500 hover:text-white transition-all">Edit</button>`;
                 }
 
                 row.innerHTML = `
-                    <div class="p-3 border-r border-slate-800">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <div class="text-[11px] font-bold text-slate-200">${emp.name} ${emp.edited ? '<span class="text-orange-400 text-[8px]">[EDITED]</span>' : ''}</div>
-                                <div class="text-[8px] text-slate-500 uppercase">${emp.team} | Status: ${emp.status}</div>
-                                ${emp.history ? `<div class="text-[7px] text-slate-400 italic">Was: ${emp.history.prevStart} to ${emp.history.prevEnd}</div>` : ''}
+                    <div class="p-3 border-r border-slate-800 flex justify-between items-center group">
+                        <div class="overflow-hidden">
+                            <div class="text-[11px] font-bold ${isConflicted ? 'text-red-400' : 'text-slate-200'} truncate">
+                                ${emp.name} ${emp.edited ? '<span class="text-orange-400 text-[9px] ml-1">[EDITED]</span>' : ''}
                             </div>
-                            <div class="flex flex-col gap-1">${controls}</div>
+                            <div class="text-[8px] text-slate-500 uppercase font-semibold">${emp.team} | ${emp.status}</div>
+                            ${emp.history ? `<div class="text-[7px] text-orange-300/60 mt-1 italic">Was: ${emp.history.prevStart} to ${emp.history.prevEnd} (Changed at ${emp.history.time})</div>` : ''}
                         </div>
+                        <div class="flex">${actionButtons}</div>
                     </div>
-                    <div class="relative h-12 w-full flex items-center px-1">
-                        <div class="absolute inset-0 flex pointer-events-none opacity-5">
-                            ${Array(12).fill(0).map(() => `<div class="flex-1 border-r border-slate-700"></div>`).join('')}
-                        </div>
-                        <div class="absolute h-6 rounded flex items-center px-2 shadow-lg"
-                             style="left: ${left}%; width: ${width}%; background: ${emp.status === 'approved' ? 'linear-gradient(90deg, #065f46, #10b981)' : 'linear-gradient(90deg, #1e293b, #334155)'}; border: 1px solid ${conflicts.length > 0 ? '#ef4444' : 'transparent'}">
-                            <span class="text-[8px] font-black text-white truncate uppercase">${conflicts.length > 0 ? '⚠️ CONFLICT' : 'PLANNED'}</span>
+                    <div class="relative h-14 w-full flex items-center px-1">
+                        <div class="leave-bar absolute h-7 rounded shadow-lg flex items-center px-3 group cursor-pointer transition-all hover:scale-[1.01]"
+                             style="left: ${left}%; width: ${width}%; background: ${emp.status === 'approved' ? 'linear-gradient(90deg, #065f46, #10b981)' : 'linear-gradient(90deg, #1e293b, #334155)'}; border: 1.5px solid ${isConflicted ? '#ef4444' : 'transparent'}">
+                            <span class="text-[8px] font-black text-white truncate uppercase tracking-tighter">${isConflicted ? '⚠️ CONFLICT' : (emp.status === 'approved' ? 'READY' : 'PENDING')}</span>
+                            <div class="tooltip hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white text-slate-900 text-[10px] p-2 rounded shadow-2xl z-50 whitespace-nowrap font-bold">
+                                ${emp.name} | ${emp.start} to ${emp.end}
+                            </div>
                         </div>
                     </div>
                 `;
                 body.appendChild(row);
             });
 
-            if (myConflicts.length > 0) {
-                conflictPanel.classList.remove('hidden');
-                conflictList.innerHTML = myConflicts.map(m => `<div>${m}</div>`).join('');
-            } else {
-                conflictPanel.classList.add('hidden');
-            }
+            if (conflictsFound.length > 0) {
+                confPanel.classList.remove('hidden');
+                confList.innerHTML = conflictsFound.map(c => `<div class="bg-red-900/20 p-2 rounded border border-red-500/20">${c}</div>`).join('');
+            } else { confPanel.classList.add('hidden'); }
         }
     </script>
 </body>
