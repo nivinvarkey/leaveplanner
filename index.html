@@ -3,153 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Epic Piping | Admin Leave Pro</title>
+    <title>Epic Piping | Org-Based Leave Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
-        .gantt-container { display: grid; grid-template-columns: 350px 1fr; }
-        .week-segment { flex: 1; border-right: 1px solid #1e293b; font-size: 8px; text-align: center; padding-top: 4px; color: #475569; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .gantt-container { display: grid; grid-template-columns: 380px 1fr; }
         .hidden { display: none !important; }
         .leave-bar:hover .tooltip { display: block; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 md:p-6">
+<body class="p-4">
 
     <div id="authSection" class="max-w-md mx-auto mt-20 bg-slate-900 p-8 rounded-2xl border border-slate-800 shadow-2xl">
-        <h2 class="text-2xl font-bold text-emerald-400 mb-6 text-center">EPIC PIPING LOGIN</h2>
+        <h2 class="text-2xl font-bold text-emerald-400 mb-6 text-center italic underline tracking-widest">EPIC PIPING SYSTEMS</h2>
         <div class="space-y-4">
-            <div>
-                <label class="text-xs text-slate-500 uppercase font-bold mb-1 block">Username</label>
-                <input type="text" id="authUser" placeholder="Enter Username" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500">
-            </div>
-            <div>
-                <label class="text-xs text-slate-500 uppercase font-bold mb-1 block">Password</label>
-                <input type="password" id="authPass" placeholder="••••••••" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500">
-            </div>
-            <button onclick="handleLogin()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg transition-all">Enter System</button>
-            <p class="text-[10px] text-center text-slate-600 italic">Default Admin: admin / admin123</p>
+            <input type="text" id="authUser" placeholder="Username" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500">
+            <input type="password" id="authPass" placeholder="Password" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500">
+            <button onclick="handleLogin()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg transition-all">LOGIN</button>
         </div>
     </div>
 
-    <div id="dashboardSection" class="hidden max-w-[1700px] mx-auto">
-        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
+    <div id="dashboardSection" class="hidden max-w-[1800px] mx-auto">
+        <header class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-2xl font-bold text-emerald-400 tracking-tight">ANNUAL LEAVE PLANNER - 2026</h1>
-                <p id="userWelcome" class="text-slate-500 text-sm"></p>
+                <h1 class="text-xl font-bold text-emerald-400">ANNUAL LEAVE PLANNER 2026</h1>
+                <p id="userWelcome" class="text-slate-500 text-xs"></p>
             </div>
-            <button onclick="logout()" class="bg-slate-800 hover:bg-red-900/40 text-slate-300 px-4 py-2 rounded-lg text-xs border border-slate-700">Logout</button>
+            <button onclick="logout()" class="bg-slate-800 text-slate-400 px-4 py-2 rounded text-xs border border-slate-700">Logout</button>
         </header>
 
-        <div id="adminPanel" class="hidden mb-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-slate-900 border border-emerald-500/20 p-5 rounded-xl">
-                <h3 class="text-emerald-400 font-bold text-xs uppercase mb-4">Department & Manager Setup</h3>
+        <div id="adminPanel" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-slate-900/50 border border-emerald-500/30 p-4 rounded-xl">
+                <h3 class="text-emerald-400 text-[10px] font-bold uppercase mb-3">1. Manage Departments</h3>
                 <div class="flex gap-2 mb-4">
-                    <input type="text" id="deptInput" placeholder="New Dept Name" class="flex-1 bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
-                    <button onclick="addDept()" class="bg-emerald-600 px-4 py-2 rounded text-xs font-bold">Add Dept</button>
+                    <input type="text" id="newDeptName" placeholder="Dept Name" class="flex-1 bg-slate-800 border border-slate-700 p-2 rounded text-xs">
+                    <button onclick="addDept()" class="bg-emerald-600 px-3 py-1 rounded text-xs">+</button>
                 </div>
-                <div id="deptList" class="space-y-2 max-h-40 overflow-y-auto"></div>
+                <div id="deptList" class="space-y-1 max-h-32 overflow-y-auto text-xs text-slate-400"></div>
             </div>
 
-            <div class="bg-slate-900 border border-emerald-500/20 p-5 rounded-xl">
-                <h3 class="text-emerald-400 font-bold text-xs uppercase mb-4">Create Employee/Manager</h3>
+            <div class="bg-slate-900/50 border border-blue-500/30 p-4 rounded-xl">
+                <h3 class="text-blue-400 text-[10px] font-bold uppercase mb-3">2. Manage Teams</h3>
+                <div class="space-y-2">
+                    <select id="teamParentDept" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-xs"></select>
+                    <div class="flex gap-2">
+                        <input type="text" id="newTeamName" placeholder="Team Name" class="flex-1 bg-slate-800 border border-slate-700 p-2 rounded text-xs">
+                        <button onclick="addTeam()" class="bg-blue-600 px-3 py-1 rounded text-xs">+</button>
+                    </div>
+                </div>
+                <div id="teamList" class="mt-4 space-y-1 max-h-32 overflow-y-auto text-xs text-slate-400"></div>
+            </div>
+
+            <div class="bg-slate-900/50 border border-purple-500/30 p-4 rounded-xl">
+                <h3 class="text-purple-400 text-[10px] font-bold uppercase mb-3">3. Create Accounts</h3>
                 <div class="grid grid-cols-2 gap-2 mb-2">
-                    <input type="text" id="regUser" placeholder="Username" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
-                    <input type="text" id="regName" placeholder="Full Name" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+                    <input type="text" id="regUser" placeholder="UserID" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs">
+                    <input type="text" id="regName" placeholder="Full Name" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs">
                 </div>
-                <div class="grid grid-cols-2 gap-2 mb-4">
-                    <select id="regRole" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+                <div class="grid grid-cols-2 gap-2 mb-2">
+                    <select id="regRole" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs" onchange="toggleRegInputs()">
                         <option value="employee">Employee</option>
-                        <option value="manager">Manager</option>
+                        <option value="manager">Dept Manager</option>
                     </select>
-                    <select id="regDept" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none"></select>
+                    <select id="regDept" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs" onchange="updateTeamOptions()"></select>
                 </div>
-                <button onclick="createUser()" class="w-full bg-blue-600 py-2 rounded text-xs font-bold">Register User</button>
+                <select id="regTeam" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-xs mb-2"></select>
+                <button onclick="createUser()" class="w-full bg-purple-600 py-2 rounded text-xs font-bold uppercase">Save User</button>
             </div>
         </div>
 
-        <div id="applyPanel" class="hidden mb-6 bg-slate-900/50 p-6 rounded-xl border border-slate-800">
-            <h3 class="text-xs font-bold uppercase text-emerald-400 mb-4">Submit Leave Plan</h3>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <input type="text" id="leaveUser" class="bg-slate-800 border border-slate-700 p-2.5 rounded text-sm outline-none" readonly>
-                <input type="date" id="leaveStart" class="bg-slate-800 border border-slate-700 p-2.5 rounded text-sm">
-                <input type="date" id="leaveEnd" class="bg-slate-800 border border-slate-700 p-2.5 rounded text-sm">
-                <button onclick="submitLeave()" class="bg-emerald-600 font-bold rounded py-2 transition-all">Apply Dates</button>
+        <div id="applyPanel" class="hidden mb-6 bg-slate-900 p-6 rounded-xl border border-slate-800">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase font-bold block mb-1">Applying as</label>
+                    <input type="text" id="leaveUser" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none" readonly>
+                </div>
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase font-bold block mb-1">Start Date</label>
+                    <input type="date" id="leaveStart" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm">
+                </div>
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase font-bold block mb-1">End Date</label>
+                    <input type="date" id="leaveEnd" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm">
+                </div>
+                <button onclick="submitLeave()" class="bg-emerald-600 font-bold rounded py-2 text-sm hover:bg-emerald-500 transition-all">SUBMIT REQUEST</button>
             </div>
-        </div>
-
-        <div id="conflictPanel" class="hidden mb-6 bg-red-950/20 border border-red-900/40 rounded-xl p-4">
-            <h2 class="text-red-500 font-bold text-xs mb-2 uppercase">⚠️ Overlap Alerts</h2>
-            <div id="conflictList" class="text-xs text-red-300 grid grid-cols-1 md:grid-cols-2 gap-2"></div>
         </div>
 
         <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
-            <div class="gantt-container bg-slate-800/40 border-b border-slate-700">
-                <div class="p-4 font-bold text-slate-500 uppercase text-[10px] tracking-widest flex items-end border-r border-slate-700">Department Resources</div>
-                <div class="flex flex-col">
-                    <div class="flex border-b border-slate-700/50">
-                        <script>
-                            ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].forEach(m => 
-                                document.write(`<div class="flex-1 text-center py-3 text-[10px] font-bold uppercase border-r border-slate-700/50 text-slate-400">${m}</div>`));
-                        </script>
-                    </div>
-                </div>
-            </div>
-            <div id="chartBody" class="max-h-[50vh] overflow-y-auto"></div>
+            <div id="chartBody" class="max-h-[60vh] overflow-y-auto"></div>
         </div>
     </div>
 
     <script>
         // --- DATA STORE ---
-        let db = JSON.parse(localStorage.getItem('epic_db')) || {
-            users: [{ user: "admin", pass: "admin123", name: "System Admin", role: "admin", dept: "Global" }],
-            depts: ["Team B", "Team C", "Support Team", "DC Team"],
+        let db = JSON.parse(localStorage.getItem('epic_piping_db')) || {
+            depts: [], // { name: "Engineering" }
+            teams: [], // { name: "Design", dept: "Engineering" }
+            users: [{ user: "admin", pass: "admin123", name: "Super Admin", role: "admin" }],
             leaves: []
         };
 
-        let currentSession = null;
+        let session = null;
 
         // --- AUTH ---
         function handleLogin() {
             const u = document.getElementById('authUser').value;
             const p = document.getElementById('authPass').value;
-            const account = db.users.find(x => x.user === u && x.pass === p);
-            
-            if(account) {
-                currentSession = account;
-                initDashboard();
-            } else { alert("Wrong username/password"); }
+            const acc = db.users.find(x => x.user === u && x.pass === p);
+            if(acc) { session = acc; initDashboard(); } else { alert("Login Failed"); }
         }
 
-        function logout() {
-            currentSession = null;
-            document.getElementById('authSection').classList.remove('hidden');
-            document.getElementById('dashboardSection').classList.add('hidden');
-        }
+        function logout() { session = null; location.reload(); }
 
-        // --- DASHBOARD INIT ---
+        // --- DASHBOARD ---
         function initDashboard() {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('dashboardSection').classList.remove('hidden');
-            document.getElementById('userWelcome').innerText = `${currentSession.name} (${currentSession.role.toUpperCase()}) | ${currentSession.dept}`;
+            document.getElementById('userWelcome').innerText = `${session.name} | ${session.role.toUpperCase()} | ${session.dept || 'Global'}`;
             
-            // Toggle visibility
-            document.getElementById('adminPanel').classList.toggle('hidden', currentSession.role !== 'admin');
-            document.getElementById('applyPanel').classList.toggle('hidden', currentSession.role === 'admin');
+            document.getElementById('adminPanel').classList.toggle('hidden', session.role !== 'admin');
+            document.getElementById('applyPanel').classList.toggle('hidden', session.role === 'admin');
             
-            if(currentSession.role !== 'admin') {
-                document.getElementById('leaveUser').value = currentSession.name;
-            }
+            if(session.role !== 'admin') document.getElementById('leaveUser').value = session.name;
 
-            renderAdminTools();
+            refreshAdminControls();
             renderChart();
         }
 
-        // --- ADMIN ACTIONS ---
+        // --- ADMIN LOGIC ---
         function addDept() {
-            const name = document.getElementById('deptInput').value;
-            if(name) { db.depts.push(name); save(); renderAdminTools(); }
+            const name = document.getElementById('newDeptName').value;
+            if(!name) return;
+            db.depts.push({ name });
+            save(); refreshAdminControls();
+        }
+
+        function addTeam() {
+            const name = document.getElementById('newTeamName').value;
+            const dept = document.getElementById('teamParentDept').value;
+            if(!name || !dept) return;
+            db.teams.push({ name, dept });
+            save(); refreshAdminControls();
         }
 
         function createUser() {
@@ -157,34 +154,48 @@
             const name = document.getElementById('regName').value;
             const role = document.getElementById('regRole').value;
             const dept = document.getElementById('regDept').value;
+            const team = document.getElementById('regTeam').value;
             
-            if(user && name) {
-                db.users.push({ user, pass: "123", name, role, dept }); // Default pass 123
-                save();
-                alert(`User Created! Password is: 123`);
-            }
+            if(!user || !name) return;
+            db.users.push({ user, pass: "123", name, role, dept, team: role === 'manager' ? 'All Teams' : team });
+            save(); alert(`Created! User: ${user} Pass: 123`);
         }
 
-        function renderAdminTools() {
+        function refreshAdminControls() {
             const dList = document.getElementById('deptList');
-            const dSelect = document.getElementById('regDept');
-            dList.innerHTML = ''; dSelect.innerHTML = '';
-            
+            const dParent = document.getElementById('teamParentDept');
+            const dReg = document.getElementById('regDept');
+            const tList = document.getElementById('teamList');
+
+            dList.innerHTML = ''; dParent.innerHTML = ''; dReg.innerHTML = ''; tList.innerHTML = '';
+
             db.depts.forEach(d => {
-                dList.innerHTML += `<div class="flex justify-between items-center bg-slate-800 p-2 rounded text-xs border border-slate-700">
-                    <span>${d}</span>
-                    <button onclick="removeDept('${d}')" class="text-red-500">✕</button>
-                </div>`;
-                dSelect.innerHTML += `<option>${d}</option>`;
+                dList.innerHTML += `<div class="flex justify-between bg-slate-800 p-1 px-2 rounded mb-1"><span>${d.name}</span></div>`;
+                dParent.innerHTML += `<option>${d.name}</option>`;
+                dReg.innerHTML += `<option>${d.name}</option>`;
+            });
+
+            db.teams.forEach(t => {
+                tList.innerHTML += `<div class="flex justify-between bg-slate-800 p-1 px-2 rounded mb-1"><span>${t.name} <i class="text-[9px] text-slate-500">(${t.dept})</i></span></div>`;
+            });
+            updateTeamOptions();
+        }
+
+        function toggleRegInputs() {
+            const role = document.getElementById('regRole').value;
+            document.getElementById('regTeam').classList.toggle('hidden', role === 'manager');
+        }
+
+        function updateTeamOptions() {
+            const dept = document.getElementById('regDept').value;
+            const tReg = document.getElementById('regTeam');
+            tReg.innerHTML = '';
+            db.teams.filter(t => t.dept === dept).forEach(t => {
+                tReg.innerHTML += `<option>${t.name}</option>`;
             });
         }
 
-        function removeDept(name) {
-            db.depts = db.depts.filter(d => d !== name);
-            save(); renderAdminTools();
-        }
-
-        // --- LEAVE ACTIONS ---
+        // --- LEAVE LOGIC ---
         function submitLeave() {
             const start = document.getElementById('leaveStart').value;
             const end = document.getElementById('leaveEnd').value;
@@ -192,25 +203,13 @@
 
             db.leaves.push({
                 id: Date.now(),
-                name: currentSession.name,
-                dept: currentSession.dept,
+                name: session.name,
+                dept: session.dept,
+                team: session.team,
                 start, end,
-                status: 'pending',
-                history: null
+                status: 'pending'
             });
             save(); renderChart();
-        }
-
-        function editLeave(id) {
-            const idx = db.leaves.findIndex(l => l.id === id);
-            const nS = prompt("New Start Date:", db.leaves[idx].start);
-            const nE = prompt("New End Date:", db.leaves[idx].end);
-            if(nS && nE) {
-                db.leaves[idx].history = { oldS: db.leaves[idx].start, oldE: db.leaves[idx].end };
-                db.leaves[idx].start = nS;
-                db.leaves[idx].end = nE;
-                save(); renderChart();
-            }
         }
 
         function approveLeave(id) {
@@ -220,82 +219,57 @@
         }
 
         function deleteLeave(id) {
-            if(confirm("Delete this entry?")) {
-                db.leaves = db.leaves.filter(l => l.id !== id);
-                save(); renderChart();
-            }
+            if(confirm("Delete?")) { db.leaves = db.leaves.filter(l => l.id !== id); save(); renderChart(); }
         }
 
-        function save() {
-            localStorage.setItem('epic_db', JSON.stringify(db));
-        }
+        function save() { localStorage.setItem('epic_piping_db', JSON.stringify(db)); }
 
-        // --- CHART & CONFLICTS ---
+        // --- CHART ---
         function renderChart() {
             const body = document.getElementById('chartBody');
-            const cList = document.getElementById('conflictList');
-            const cPanel = document.getElementById('conflictPanel');
-            body.innerHTML = ''; cList.innerHTML = '';
-            let conflicts = [];
+            body.innerHTML = '';
 
-            // Filter logic
+            // Scope filter
             const visible = db.leaves.filter(l => {
-                if(currentSession.role === 'admin') return true;
-                if(currentSession.role === 'manager') return l.dept === currentSession.dept;
-                return l.dept === currentSession.dept; // Employees see team schedule
+                if(session.role === 'admin') return true;
+                if(session.role === 'manager') return l.dept === session.dept;
+                return l.team === session.team; // Employees only see their direct team
             });
 
+            // Sorting by Team
+            visible.sort((a,b) => a.team.localeCompare(b.team));
+
             visible.forEach(emp => {
-                const overlaps = db.leaves.filter(o => 
-                    o.id !== emp.id && o.dept === emp.dept && 
-                    new Date(emp.start) <= new Date(o.end) && new Date(o.start) <= new Date(emp.end)
-                );
-
-                if(emp.name === currentSession.name && overlaps.length > 0) {
-                    overlaps.forEach(o => conflicts.push(`Conflict with <b>${o.name}</b> (${o.start} to ${o.end})`));
-                }
-
                 const start = new Date(emp.start);
                 const end = new Date(emp.end);
                 const left = ((start - new Date('2026-01-01')) / (1000*60*60*24) / 365) * 100;
                 const width = ((end - start) / (1000*60*60*24) / 365) * 100;
 
-                let row = document.createElement('div');
-                row.className = 'gantt-container border-b border-slate-800/40 items-center';
-                
                 let btns = '';
-                if(currentSession.role === 'admin' || (currentSession.role === 'manager' && emp.dept === currentSession.dept)) {
-                    btns += `<button onclick="approveLeave(${emp.id})" class="text-[9px] px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">${emp.status === 'approved' ? '✓' : 'Approve'}</button>`;
-                    btns += `<button onclick="deleteLeave(${emp.id})" class="ml-1 text-[9px] px-2 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/30">✕</button>`;
-                }
-                if(emp.name === currentSession.name || currentSession.role === 'admin') {
-                    btns += `<button onclick="editLeave(${emp.id})" class="ml-1 text-[9px] px-2 py-1 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">Edit</button>`;
+                if(session.role === 'admin' || (session.role === 'manager' && emp.dept === session.dept)) {
+                    btns += `<button onclick="approveLeave(${emp.id})" class="text-[9px] px-2 py-1 bg-emerald-600/20 text-emerald-400 border border-emerald-500/20 rounded">${emp.status === 'approved' ? '✓' : 'Approve'}</button>`;
+                    btns += `<button onclick="deleteLeave(${emp.id})" class="ml-1 text-[9px] px-2 py-1 bg-red-600/20 text-red-400 border border-red-500/20 rounded">✕</button>`;
                 }
 
+                let row = document.createElement('div');
+                row.className = 'gantt-container border-b border-slate-800/40 items-center bg-slate-900';
                 row.innerHTML = `
-                    <div class="p-3 border-r border-slate-800 flex justify-between items-center overflow-hidden">
+                    <div class="p-3 border-r border-slate-800 flex justify-between items-center bg-slate-900">
                         <div class="truncate">
-                            <div class="text-[11px] font-bold ${overlaps.length > 0 ? 'text-red-400' : 'text-slate-200'}">${emp.name}</div>
-                            <div class="text-[8px] text-slate-500 uppercase font-bold">${emp.dept} | ${emp.status}</div>
-                            ${emp.history ? `<div class="text-[7px] text-orange-400 mt-1 italic">Was: ${emp.history.oldS} to ${emp.history.oldE}</div>` : ''}
+                            <div class="text-[11px] font-bold text-slate-200">${emp.name}</div>
+                            <div class="text-[8px] text-slate-500 font-bold uppercase">${emp.dept} > ${emp.team}</div>
                         </div>
                         <div class="flex">${btns}</div>
                     </div>
-                    <div class="relative h-14 w-full flex items-center px-1">
-                        <div class="leave-bar absolute h-7 rounded shadow-xl flex items-center px-3 transition-all hover:scale-[1.01]"
-                             style="left: ${left}%; width: ${width}%; background: ${emp.status === 'approved' ? 'linear-gradient(90deg, #064e3b, #10b981)' : 'linear-gradient(90deg, #1e293b, #334155)'}; border: 1px solid ${overlaps.length > 0 ? '#ef4444' : 'transparent'}">
-                            <span class="text-[8px] font-black text-white truncate uppercase">${overlaps.length > 0 ? '⚠️ CONFLICT' : emp.status}</span>
-                            <div class="tooltip hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white text-slate-900 text-[10px] p-2 rounded shadow-2xl z-50 whitespace-nowrap font-bold">
-                                ${emp.start} to ${emp.end}
-                            </div>
+                    <div class="relative h-14 w-full flex items-center bg-slate-800/10">
+                        <div class="absolute h-7 rounded shadow-xl flex items-center px-3"
+                             style="left: ${left}%; width: ${width}%; background: ${emp.status === 'approved' ? 'linear-gradient(90deg, #064e3b, #10b981)' : 'linear-gradient(90deg, #1e293b, #334155)'}">
+                            <span class="text-[8px] font-black text-white truncate uppercase">${emp.status}</span>
                         </div>
                     </div>
                 `;
                 body.appendChild(row);
             });
-
-            cPanel.classList.toggle('hidden', conflicts.length === 0);
-            cList.innerHTML = conflicts.map(c => `<div>${c}</div>`).join('');
         }
     </script>
 </body>
