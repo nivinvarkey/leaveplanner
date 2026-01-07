@@ -1,310 +1,297 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Epic Piping | Enterprise Leave System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <style>
-        body { background-color: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
-        .gantt-container { display: grid; grid-template-columns: 400px 1fr; }
-        .hidden { display: none !important; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        .input-style { @apply w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500 text-sm; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epic Piping | Enterprise Leave System</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { background-color: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+  .gantt-container { display: grid; grid-template-columns: 400px 1fr; }
+  .hidden { display: none !important; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+</style>
 </head>
 <body class="p-4">
 
-    <div id="authSection" class="max-w-md mx-auto mt-10">
-        
-        <div id="loginBox" class="bg-slate-900 p-8 rounded-2xl border border-slate-800 shadow-2xl">
-            <h2 class="text-2xl font-bold text-emerald-400 mb-6 text-center tracking-widest uppercase">Epic Piping Login</h2>
-            <div class="space-y-4">
-                <input type="text" id="authUser" placeholder="Username" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500">
-                <input type="password" id="authPass" placeholder="Password" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500">
-                <button onclick="handleLogin()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg transition-all uppercase tracking-widest">Sign In</button>
-                
-                <div class="flex justify-between items-center text-[11px] mt-4 px-1">
-                    <button onclick="showView('signupBox')" class="text-emerald-500 hover:underline">Create New Profile</button>
-                    <button onclick="showView('forgotBox')" class="text-slate-500 hover:text-white">Forgot Password?</button>
-                </div>
-            </div>
-        </div>
+<!-- AUTH SECTION -->
+<div id="authSection" class="max-w-md mx-auto mt-10">
 
-        <div id="signupBox" class="hidden bg-slate-900 p-8 rounded-2xl border border-emerald-500/30 shadow-2xl">
-            <h2 class="text-xl font-bold text-emerald-400 mb-4 text-center uppercase">New Registration</h2>
-            <div class="space-y-3">
-                <input type="text" id="signU" placeholder="Choose Username" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm">
-                <input type="password" id="signP" placeholder="Create Password" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm">
-                <input type="text" id="signN" placeholder="Full Name" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm">
-                <input type="email" id="signE" placeholder="Work Email" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm">
-                
-                <div class="grid grid-cols-2 gap-2">
-                    <select id="signD" onchange="filterSignupTeams()" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs"></select>
-                    <select id="signT" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs"></select>
-                </div>
-                
-                <button onclick="handleSignup()" class="w-full bg-emerald-600 py-3 rounded-lg font-bold mt-2 uppercase text-xs">Register & Send Welcome Email</button>
-                <button onclick="showView('loginBox')" class="w-full text-[10px] text-slate-500 uppercase mt-2">Back to Login</button>
-            </div>
-        </div>
-
-        <div id="forgotBox" class="hidden bg-slate-900 p-8 rounded-2xl border border-blue-500/30 shadow-2xl">
-            <h2 class="text-xl font-bold text-blue-400 mb-4 text-center uppercase tracking-widest">Password Recovery</h2>
-            <p class="text-[10px] text-slate-400 mb-4 text-center px-4">Enter your username. We will email a new random password to your registered email address.</p>
-            <div class="space-y-4">
-                <input type="text" id="forgotU" placeholder="Enter Your Username" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-blue-500">
-                <button onclick="handleForgot()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition-all uppercase text-xs">Email Me New Password</button>
-                <button onclick="showView('loginBox')" class="w-full text-[10px] text-slate-500 uppercase">Return to Login</button>
-            </div>
-        </div>
+  <!-- LOGIN -->
+  <div id="loginBox" class="bg-slate-900 p-8 rounded-2xl border border-slate-800 shadow-2xl">
+    <h2 class="text-2xl font-bold text-emerald-400 mb-6 text-center uppercase tracking-widest">Epic Piping Login</h2>
+    <div class="space-y-4">
+      <input type="text" id="authUser" placeholder="Username" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500">
+      <input type="password" id="authPass" placeholder="Password" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500">
+      <button onclick="handleLogin()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg uppercase tracking-widest">Sign In</button>
+      <div class="flex justify-between items-center text-[11px] mt-4 px-1">
+        <button onclick="showView('signupBox')" class="text-emerald-500 hover:underline">Create New Profile</button>
+        <button onclick="showView('forgotBox')" class="text-slate-500 hover:text-white">Forgot Password?</button>
+      </div>
     </div>
+  </div>
 
-    <div id="dashboardSection" class="hidden max-w-[1800px] mx-auto">
-        <header class="flex justify-between items-center mb-6 bg-slate-900 p-4 rounded-xl border border-slate-800">
-            <div>
-                <h1 class="text-xl font-bold text-emerald-400">EPIC PIPING PLANNER 2026</h1>
-                <p id="userWelcome" class="text-slate-500 text-xs font-bold uppercase tracking-wider"></p>
-            </div>
-            <div class="flex gap-3">
-                <button onclick="toggleProfile()" class="bg-blue-600/20 text-blue-400 px-4 py-2 rounded text-xs border border-blue-500/30">My Security</button>
-                <button onclick="logout()" class="bg-slate-800 text-slate-400 px-4 py-2 rounded text-xs border border-slate-700">Logout</button>
-            </div>
-        </header>
-
-        <div id="profilePanel" class="hidden mb-6 bg-slate-900 p-6 rounded-xl border border-blue-500/30 max-w-sm mx-auto shadow-2xl">
-            <h3 class="text-blue-400 font-bold text-xs uppercase mb-4">Change My Password</h3>
-            <input type="password" id="editPass" placeholder="New Password" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm mb-4 outline-none">
-            <button onclick="saveProfile()" class="w-full bg-blue-600 py-2 rounded font-bold text-xs">UPDATE PASSWORD</button>
-        </div>
-
-        <div id="adminPanel" class="hidden space-y-6 mb-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <h3 class="text-emerald-400 text-xs font-bold uppercase mb-4">Organization Setup</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <input type="text" id="newDept" placeholder="Department" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-xs mb-2">
-                            <button onclick="addDept()" class="w-full bg-emerald-600 py-1 rounded text-[10px] font-bold">ADD DEPT</button>
-                        </div>
-                        <div>
-                            <select id="parentDept" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-xs mb-2"></select>
-                            <input type="text" id="newTeam" placeholder="Team Name" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-xs mb-2">
-                            <button onclick="addTeam()" class="w-full bg-blue-600 py-1 rounded text-[10px] font-bold">ADD TEAM</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl shadow-lg h-48 overflow-y-auto">
-                    <h3 class="text-slate-400 text-xs font-bold uppercase mb-4">System Users</h3>
-                    <table class="w-full text-[10px] text-slate-400">
-                        <tbody id="userListTable"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="actionPanel" class="mb-6 bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-xl">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                <div id="staffSelectContainer" class="hidden">
-                    <label class="text-[10px] text-slate-500 font-bold block mb-1 uppercase text-xs">Employee Name</label>
-                    <select id="leaveStaffName" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm"></select>
-                </div>
-                <div id="selfNameContainer">
-                    <label class="text-[10px] text-slate-500 font-bold block mb-1 uppercase text-xs">Name</label>
-                    <input type="text" id="leaveSelfName" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm" readonly>
-                </div>
-                <div><input type="date" id="leaveStart" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm"></div>
-                <div><input type="date" id="leaveEnd" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm"></div>
-                <button onclick="submitLeave()" class="bg-emerald-600 font-bold rounded py-2 text-sm hover:bg-emerald-500">SUBMIT DATES</button>
-            </div>
-        </div>
-
-        <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
-            <div id="chartBody" class="max-h-[60vh] overflow-y-auto"></div>
-        </div>
+  <!-- SIGNUP -->
+  <div id="signupBox" class="hidden bg-slate-900 p-8 rounded-2xl border border-emerald-500/30 shadow-2xl">
+    <h2 class="text-xl font-bold text-emerald-400 mb-4 text-center uppercase">New Registration</h2>
+    <div class="space-y-3">
+      <input type="text" id="signU" placeholder="Choose Username" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm">
+      <input type="password" id="signP" placeholder="Create Password" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm">
+      <input type="text" id="signN" placeholder="Full Name" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm">
+      <select id="signRole" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm">
+        <option value="employee">Employee</option>
+        <option value="manager">Manager</option>
+      </select>
+      <div class="grid grid-cols-2 gap-2">
+        <select id="signD" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs"></select>
+        <select id="signT" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs"></select>
+      </div>
+      <button onclick="handleSignup()" class="w-full bg-emerald-600 py-3 rounded-lg font-bold uppercase text-xs">Register</button>
+      <button onclick="showView('loginBox')" class="w-full text-[10px] text-slate-500 uppercase mt-2">Back to Login</button>
     </div>
+  </div>
 
-    <script>
-        // --- EMAILJS ---
-        (function(){ emailjs.init("4xvKzKRNKKt4Wl9zh"); })();
+  <!-- FORGOT -->
+  <div id="forgotBox" class="hidden bg-slate-900 p-8 rounded-2xl border border-blue-500/30 shadow-2xl">
+    <h2 class="text-xl font-bold text-blue-400 mb-4 text-center uppercase tracking-widest">Password Recovery</h2>
+    <p class="text-[10px] text-slate-400 mb-4 text-center px-4">Admin can reset passwords from dashboard.</p>
+    <button onclick="showView('loginBox')" class="w-full text-[10px] text-slate-500 uppercase">Return to Login</button>
+  </div>
 
-        let db = JSON.parse(localStorage.getItem('epic_piping_db_v6')) || {
-            depts: [], teams: [], leaves: [],
-            users: [{ user: "admin", pass: "admin123", name: "System Admin", role: "admin", email: "admin@epicpiping.com" }]
-        };
-        let session = null;
+</div>
 
-        // UI NAVIGATION
-        function showView(id) {
-            ['loginBox', 'signupBox', 'forgotBox'].forEach(box => document.getElementById(box).classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-            if(id === 'signupBox') populateSignupSelects();
-        }
+<!-- DASHBOARD -->
+<div id="dashboardSection" class="hidden max-w-[1800px] mx-auto">
 
-        function handleLogin() {
-            const u = document.getElementById('authUser').value.trim();
-            const p = document.getElementById('authPass').value.trim();
-            const acc = db.users.find(x => x.user === u && x.pass === p);
-            if(acc) { session = acc; initDashboard(); } else { alert("Login failed."); }
-        }
+  <!-- HEADER -->
+  <header class="flex justify-between items-center mb-6 bg-slate-900 p-4 rounded-xl border border-slate-800">
+    <div>
+      <h1 class="text-xl font-bold text-emerald-400">EPIC PIPING PLANNER 2026</h1>
+      <p id="userWelcome" class="text-slate-500 text-xs font-bold uppercase tracking-wider"></p>
+    </div>
+    <div class="flex gap-3">
+      <button onclick="toggleProfile()" class="bg-blue-600/20 text-blue-400 px-4 py-2 rounded text-xs border border-blue-500/30">My Security</button>
+      <button onclick="logout()" class="bg-slate-800 text-slate-400 px-4 py-2 rounded text-xs border border-slate-700">Logout</button>
+    </div>
+  </header>
 
-        // SIGNUP LOGIC
-        function handleSignup() {
-            const u = document.getElementById('signU').value.trim();
-            const p = document.getElementById('signP').value.trim();
-            const n = document.getElementById('signN').value.trim();
-            const e = document.getElementById('signE').value.trim();
-            const d = document.getElementById('signD').value;
-            const t = document.getElementById('signT').value;
+  <!-- PROFILE PANEL -->
+  <div id="profilePanel" class="hidden mb-6 bg-slate-900 p-6 rounded-xl border border-blue-500/30 max-w-sm mx-auto shadow-2xl">
+    <h3 class="text-blue-400 font-bold text-xs uppercase mb-4">Change My Password</h3>
+    <input type="password" id="editPass" placeholder="New Password" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm mb-4 outline-none">
+    <button onclick="saveProfile()" class="w-full bg-blue-600 py-2 rounded font-bold text-xs">UPDATE PASSWORD</button>
+  </div>
 
-            if(!u || !p || !n || !e) return alert("Fill all fields");
-            if(db.users.some(x => x.user === u)) return alert("Username taken");
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" class="hidden space-y-6 mb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            const newUser = { user: u, pass: p, name: n, email: e, role: "employee", dept: d, team: t };
-            db.users.push(newUser);
-            save();
-            
-            // Email Welcome
-            emailjs.send('service_8gdxl3s', 'welcome_profile_v1', {
-                to_email: e, to_name: n, user_id: u, user_pass: p, dept_name: d
-            });
+      <!-- ORG SETUP -->
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+        <h3 class="text-emerald-400 text-xs font-bold uppercase mb-4">Organization Setup</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <input type="text" id="newDept" placeholder="Department" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-xs mb-2">
+            <button onclick="addDept()" class="w-full bg-emerald-600 py-1 rounded text-[10px] font-bold">ADD DEPT</button>
+          </div>
+          <div>
+            <select id="parentDept" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-xs mb-2"></select>
+            <input type="text" id="newTeam" placeholder="Team Name" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-xs mb-2">
+            <button onclick="addTeam()" class="w-full bg-blue-600 py-1 rounded text-[10px] font-bold">ADD TEAM</button>
+          </div>
+        </div>
+      </div>
 
-            alert("Signup successful! You can now login.");
-            showView('loginBox');
-        }
+      <!-- USERS -->
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl shadow-lg h-48 overflow-y-auto">
+        <h3 class="text-slate-400 text-xs font-bold uppercase mb-4">System Users</h3>
+        <table class="w-full text-[10px] text-slate-400">
+          <tbody id="userListTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-        // FORGOT PASSWORD LOGIC
-        function handleForgot() {
-            const u = document.getElementById('forgotU').value.trim();
-            const userIdx = db.users.findIndex(x => x.user === u);
-            
-            if(userIdx === -1) return alert("Username not found.");
+  <!-- ACTION PANEL (LEAVE REQUEST) -->
+  <div id="actionPanel" class="mb-6 bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-xl">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+      <div id="staffSelectContainer" class="hidden">
+        <label class="text-[10px] text-slate-500 font-bold block mb-1 uppercase text-xs">Employee Name</label>
+        <select id="leaveStaffName" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm"></select>
+      </div>
+      <div id="selfNameContainer">
+        <label class="text-[10px] text-slate-500 font-bold block mb-1 uppercase text-xs">Name</label>
+        <input type="text" id="leaveSelfName" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm" readonly>
+      </div>
+      <div><input type="date" id="leaveStart" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm"></div>
+      <div><input type="date" id="leaveEnd" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm"></div>
+      <button onclick="submitLeave()" class="bg-emerald-600 font-bold rounded py-2 text-sm hover:bg-emerald-500">SUBMIT DATES</button>
+    </div>
+  </div>
 
-            const newRandomPass = Math.random().toString(36).slice(-6).toUpperCase();
-            db.users[userIdx].pass = newRandomPass;
-            save();
+  <!-- LEAVE CHART -->
+  <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
+    <div id="chartBody" class="max-h-[60vh] overflow-y-auto"></div>
+  </div>
 
-            // Email New Password
-            emailjs.send('service_8gdxl3s', 'welcome_profile_v1', {
-                to_email: db.users[userIdx].email,
-                to_name: db.users[userIdx].name,
-                user_id: u,
-                user_pass: newRandomPass,
-                dept_name: "Password Recovery"
-            }).then(() => {
-                alert("A new password has been emailed to your registered address.");
-                showView('loginBox');
-            });
-        }
+  <!-- DECLINED LEAVE SECTION -->
+  <div id="declinedSection" class="hidden mt-6 bg-slate-900 border border-red-600 p-4 rounded-xl">
+    <h3 class="text-red-400 text-xs font-bold uppercase mb-2">Declined Leaves (View Only)</h3>
+    <div id="declinedLeavesList" class="text-[10px] text-slate-400"></div>
+  </div>
 
-        function initDashboard() {
-            document.getElementById('authSection').classList.add('hidden');
-            document.getElementById('dashboardSection').classList.remove('hidden');
-            document.getElementById('userWelcome').innerText = `${session.name} | ${session.role} | ${session.dept}`;
-            document.getElementById('adminPanel').classList.toggle('hidden', session.role !== 'admin');
-            
-            if(session.role === 'manager') {
-                document.getElementById('staffSelectContainer').classList.remove('hidden');
-                document.getElementById('selfNameContainer').classList.add('hidden');
-                populateManagerStaffList();
-            } else {
-                document.getElementById('leaveSelfName').value = session.name;
-            }
-            refreshAdminUI();
-            renderChart();
-        }
+</div>
 
-        // ADMIN TOOLS
-        function addDept() {
-            const v = document.getElementById('newDept').value.trim();
-            if(v) { db.depts.push(v); save(); refreshAdminUI(); }
-        }
-        function addTeam() {
-            const t = document.getElementById('newTeam').value.trim();
-            const d = document.getElementById('parentDept').value;
-            if(t && d) { db.teams.push({ name: t, dept: d }); save(); refreshAdminUI(); }
-        }
+<script>
+let db = JSON.parse(localStorage.getItem('epic_piping_db_v7')) || {
+  depts: [], teams: [], leaves: [], declined: [],
+  users: [{ user: "admin", pass: "admin123", name: "System Admin", role: "admin", email: "" }]
+};
+let session = null;
 
-        function refreshAdminUI() {
-            if(session?.role !== 'admin') return;
-            const pD = document.getElementById('parentDept');
-            const uT = document.getElementById('userListTable');
-            pD.innerHTML = ''; uT.innerHTML = '';
-            db.depts.forEach(d => pD.innerHTML += `<option>${d}</option>`);
-            db.users.forEach(u => {
-                uT.innerHTML += `<tr class="border-b border-slate-800"><td>${u.user}</td><td>${u.name}</td><td>${u.role}</td><td><button onclick="adminResetPass('${u.user}')" class="text-blue-400">Reset</button></td></tr>`;
-            });
-        }
+// NAVIGATION
+function showView(id){
+  ['loginBox','signupBox','forgotBox'].forEach(box=>document.getElementById(box).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  if(id==='signupBox') populateSignupSelects();
+}
 
-        function adminResetPass(u) {
-            const n = prompt("New password for " + u);
-            if(n) { db.users.find(x => x.user === u).pass = n; save(); }
-        }
+// LOGIN
+function handleLogin(){
+  const u=document.getElementById('authUser').value.trim();
+  const p=document.getElementById('authPass').value.trim();
+  const acc=db.users.find(x=>x.user===u && x.pass===p);
+  if(acc){ session=acc; initDashboard(); } else { alert("Login failed."); }
+}
 
-        // HELPERS
-        function populateSignupSelects() {
-            const d = document.getElementById('signD');
-            d.innerHTML = '';
-            db.depts.forEach(dept => d.innerHTML += `<option>${dept}</option>`);
-            filterSignupTeams();
-        }
-        function filterSignupTeams() {
-            const d = document.getElementById('signD').value;
-            const t = document.getElementById('signT');
-            t.innerHTML = '';
-            db.teams.filter(x => x.dept === d).forEach(team => t.innerHTML += `<option>${team.name}</option>`);
-        }
-        function populateManagerStaffList() {
-            const s = document.getElementById('leaveStaffName');
-            s.innerHTML = `<option value="${session.name}">Myself</option>`;
-            db.users.filter(u => u.dept === session.dept && u.role === 'employee').forEach(u => s.innerHTML += `<option value="${u.name}">${u.name}</option>`);
-        }
-        function toggleProfile() { document.getElementById('profilePanel').classList.toggle('hidden'); }
-        function saveProfile() {
-            const p = document.getElementById('editPass').value;
-            if(p) { db.users.find(u => u.user === session.user).pass = p; save(); alert("Updated"); }
-        }
-        function logout() { location.reload(); }
-        function save() { localStorage.setItem('epic_piping_db_v6', JSON.stringify(db)); }
+// SIGNUP
+function handleSignup(){
+  const u=document.getElementById('signU').value.trim();
+  const p=document.getElementById('signP').value.trim();
+  const n=document.getElementById('signN').value.trim();
+  const r=document.getElementById('signRole').value;
+  const d=document.getElementById('signD').value;
+  const t=document.getElementById('signT').value;
+  if(!u||!p||!n) return alert("Fill all fields");
+  if(db.users.some(x=>x.user===u)) return alert("Username taken");
+  db.users.push({ user:u, pass:p, name:n, role:r, dept:d, team:t });
+  save(); alert("Signup success"); showView('loginBox');
+}
 
-        function submitLeave() {
-            const name = (session.role === 'manager') ? document.getElementById('leaveStaffName').value : session.name;
-            const u = db.users.find(x => x.name === name);
-            const start = document.getElementById('leaveStart').value;
-            const end = document.getElementById('leaveEnd').value;
-            if(start && end) {
-                db.leaves.push({ id: Date.now(), name, dept: u.dept, team: u.team, start, end, status: 'pending' });
-                save(); renderChart();
-            }
-        }
+// DASHBOARD INIT
+function initDashboard(){
+  document.getElementById('authSection').classList.add('hidden');
+  document.getElementById('dashboardSection').classList.remove('hidden');
+  document.getElementById('userWelcome').innerText=`${session.name} | ${session.role} | ${session.dept || ''}`;
+  document.getElementById('adminPanel').classList.toggle('hidden', session.role!=='admin');
+  if(session.role==='manager'){
+    document.getElementById('staffSelectContainer').classList.remove('hidden');
+    document.getElementById('selfNameContainer').classList.add('hidden');
+    populateManagerStaffList();
+  } else {
+    document.getElementById('leaveSelfName').value=session.name;
+  }
+  refreshAdminUI(); renderChart(); renderDeclined();
+}
 
-        function modStatus(id, s) { db.leaves.find(l => l.id === id).status = s; save(); renderChart(); }
+// PROFILE
+function toggleProfile(){ document.getElementById('profilePanel').classList.toggle('hidden'); }
+function saveProfile(){
+  const p=document.getElementById('editPass').value;
+  if(p){ db.users.find(u=>u.user===session.user).pass=p; save(); alert("Password updated"); }
+}
 
-        function renderChart() {
-            const b = document.getElementById('chartBody'); b.innerHTML = '';
-            const list = db.leaves.filter(l => {
-                if(session.role === 'admin') return true;
-                if(session.role === 'manager') return l.dept === session.dept;
-                return l.team === session.team;
-            });
-            list.forEach(l => {
-                const start = new Date(l.start); const end = new Date(l.end);
-                const left = ((start - new Date('2026-01-01')) / (1000*60*60*24) / 365) * 100;
-                const width = ((end - start) / (1000*60*60*24) / 365) * 100;
-                let btns = (session.role === 'admin' || session.role === 'manager') ? 
-                    `<button onclick="modStatus(${l.id},'approved')" class="text-emerald-400 mr-2">OK</button><button onclick="modStatus(${l.id},'declined')" class="text-red-400">NO</button>` : '';
-                
-                b.innerHTML += `<div class="gantt-container border-b border-slate-800/40 py-2">
-                    <div class="px-4 text-xs"><b>${l.name}</b><br><span class="text-[9px]">${l.team} | ${l.status}</span><br>${btns}</div>
-                    <div class="relative h-8 bg-slate-800/20">
-                        <div class="absolute h-full rounded opacity-80" style="left:${left}%; width:${width}%; background:${l.status === 'approved' ? '#059669' : (l.status === 'declined' ? '#991b1b' : '#334155')}"></div>
-                    </div>
-                </div>`;
-            });
-        }
-    </script>
+// LOGOUT
+function logout(){ location.reload(); }
+
+// SAVE DB
+function save(){ localStorage.setItem('epic_piping_db_v7', JSON.stringify(db)); }
+
+// ADMIN TOOLS
+function addDept(){ const v=document.getElementById('newDept').value.trim(); if(v){ db.depts.push(v); save(); refreshAdminUI(); } }
+function addTeam(){ const t=document.getElementById('newTeam').value.trim(); const d=document.getElementById('parentDept').value; if(t&&d){ db.teams.push({name:t,dept:d}); save(); refreshAdminUI(); } }
+function refreshAdminUI(){
+  if(session.role!=='admin') return;
+  const pD=document.getElementById('parentDept'), uT=document.getElementById('userListTable');
+  pD.innerHTML=''; uT.innerHTML='';
+  db.depts.forEach(d=>pD.innerHTML+=`<option>${d}</option>`);
+  db.users.forEach(u=>{
+    uT.innerHTML+=`<tr class="border-b border-slate-800"><td>${u.user}</td><td>${u.name}</td><td>${u.role}</td><td>${u.dept||''}</td><td>${u.team||''}</td><td><button onclick="adminResetPass('${u.user}')" class="text-blue-400 text-[10px]">Reset</button></td></tr>`;
+  });
+}
+function adminResetPass(u){ const n=prompt("New password for "+u); if(n){ db.users.find(x=>x.user===u).pass=n; save(); alert("Password updated"); } }
+
+// SIGNUP HELPER
+function populateSignupSelects(){
+  const d=document.getElementById('signD'); d.innerHTML=''; db.depts.forEach(dept=>d.innerHTML+=`<option>${dept}</option>`);
+  filterSignupTeams();
+}
+function filterSignupTeams(){
+  const d=document.getElementById('signD').value; const t=document.getElementById('signT'); t.innerHTML='';
+  db.teams.filter(x=>x.dept===d).forEach(team=>t.innerHTML+=`<option>${team.name}</option>`);
+}
+
+// MANAGER STAFF LIST
+function populateManagerStaffList(){
+  const s=document.getElementById('leaveStaffName'); s.innerHTML=`<option value="${session.name}">Myself</option>`;
+  db.users.filter(u=>u.dept===session.dept && u.role==='employee').forEach(u=>s.innerHTML+=`<option value="${u.name}">${u.name}</option>`);
+}
+
+// LEAVE REQUEST
+function submitLeave(){
+  const name=(session.role==='manager')?document.getElementById('leaveStaffName').value:session.name;
+  const u=db.users.find(x=>x.name===name);
+  const start=document.getElementById('leaveStart').value;
+  const end=document.getElementById('leaveEnd').value;
+  if(start&&end){ db.leaves.push({id:Date.now(),name,dept:u.dept,team:u.team,start,end,status:'pending'}); save(); renderChart(); }
+}
+
+// MANAGER ACTION
+function modStatus(id,s){
+  const l=db.leaves.find(l=>l.id===id);
+  if(s==='declined'){
+    const reason=prompt("Enter decline reason:");
+    l.status='declined'; l.reason=reason || "No reason provided";
+    db.declined.push(l);
+    db.leaves=db.leaves.filter(x=>x.id!==id);
+    renderDeclined();
+  } else { l.status='approved'; }
+  save(); renderChart();
+}
+
+// RENDER LEAVES
+function renderChart(){
+  const b=document.getElementById('chartBody'); b.innerHTML='';
+  const list=db.leaves.filter(l=>{
+    if(session.role==='admin') return true;
+    if(session.role==='manager') return l.dept===session.dept;
+    return l.name===session.name;
+  });
+  list.forEach(l=>{
+    const start=new Date(l.start), end=new Date(l.end);
+    const left=((start-new Date('2026-01-01'))/(1000*60*60*24)/365)*100;
+    const width=((end-start)/(1000*60*60*24)/365)*100;
+    let btns=(session.role==='admin'||session.role==='manager')?`<button onclick="modStatus(${l.id},'approved')" class="text-emerald-400 mr-2 text-[10px]">OK</button><button onclick="modStatus(${l.id},'declined')" class="text-red-400 text-[10px]">NO</button>`:'';
+    b.innerHTML+=`<div class="gantt-container border-b border-slate-800/40 py-2">
+      <div class="px-4 text-xs"><b>${l.name}</b><br><span class="text-[9px]">${l.team} | ${l.status}</span><br>${btns}</div>
+      <div class="relative h-8 bg-slate-800/20">
+        <div class="absolute h-full rounded opacity-80" style="left:${left}%; width:${width}%; background:${l.status==='approved'?'#059669':'#334155'}"></div>
+      </div>
+    </div>`;
+  });
+}
+
+// RENDER DECLINED
+function renderDeclined(){
+  const sec=document.getElementById('declinedSection');
+  const list=document.getElementById('declinedLeavesList');
+  const declined=db.declined.filter(l=>session.role==='admin'||session.role==='manager'?l.dept===session.dept:l.name===session.name);
+  if(declined.length){ sec.classList.remove('hidden'); list.innerHTML=''; declined.forEach(l=>{
+    list.innerHTML+=`<div class="border-b border-slate-800 py-1 text-[10px]"><b>${l.name}</b> | ${l.team} | <span class="text-red-400">${l.status}</span><br>Reason: ${l.reason}</div>`;
+  }); } else { sec.classList.add('hidden'); }
+}
+</script>
+
 </body>
 </html>
