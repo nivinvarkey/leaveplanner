@@ -8,5 +8,41 @@
 <body>
     <div id="app"></div>
     <script src="app.js"></script>
+<div class="admin-only mb-6 bg-slate-900 border-2 border-emerald-500/30 p-5 rounded-2xl shadow-2xl relative">
+    <h3 id="formTitle" class="text-emerald-400 font-bold text-xs mb-4 uppercase tracking-widest">Add New Leave Entry</h3>
+    <input type="hidden" id="editIndex" value="-1">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
+        <div class="flex flex-col gap-1">
+            <label class="text-[10px] text-slate-500 font-bold">NAME</label>
+            <input type="text" id="newName" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500">
+        </div>
+        <div class="flex flex-col gap-1">
+            <label class="text-[10px] text-slate-500 font-bold">DESIGNATION</label>
+            <input type="text" id="newRole" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500">
+        </div>
+        <div class="flex flex-col gap-1">
+            <label class="text-[10px] text-slate-500 font-bold">TEAM</label>
+            <select id="newTeam" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+                <option>Team B</option><option>Team C</option><option>Support Team</option><option>DC Team</option><option>Material Team</option>
+            </select>
+        </div>
+        <div class="flex flex-col gap-1">
+            <label class="text-[10px] text-slate-500 font-bold">START DATE</label>
+            <input type="date" id="newStart" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+        </div>
+        <div class="flex flex-col gap-1">
+            <label class="text-[10px] text-slate-500 font-bold">END DATE</label>
+            <input type="date" id="newEnd" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+        </div>
+        <div class="flex flex-col gap-1">
+            <label class="text-[10px] text-slate-500 font-bold">ACTION</label>
+            <button id="saveBtn" onclick="saveEntry()" class="bg-emerald-500 text-slate-900 font-black h-full rounded hover:bg-emerald-400 transition-colors py-2">SAVE ENTRY</button>
+        </div>
+        <div class="flex flex-col gap-1">
+            <label class="text-[10px] text-slate-500 font-bold">SYSTEM</label>
+            <button onclick="resetData()" class="bg-red-900/50 text-red-400 font-bold h-full rounded hover:bg-red-800 transition-colors py-2 border border-red-800/50">WIPE ALL</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
