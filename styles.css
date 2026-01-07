@@ -1,22 +1,10 @@
-/* ============================================
-File: styles.css
-Description: Custom CSS + Tailwind base for Leave Planner 2026
-============================================ */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-body {
-    background-color: #0b0f1a;
-    color: #e2e8f0;
-    font-family: 'Inter', sans-serif;
-    padding: 1rem;
-}
-
-.calendar { margin-top: 2rem; }
-
-.day-cell { border: 1px solid #cbd5e1; padding: 0.5rem; position: relative; }
-.leave-bar { position: absolute; height: 100%; background: #10b981; opacity: 0.7; border-radius: 0.25rem; }
-.conflict-panel { background: #fee2e2; border: 1px solid #fca5a5; border-radius: 0.75rem; padding: 1rem; margin-top: 1rem; }
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; padding: 1rem; }
-.modal-box { background: white; border-radius: 0.75rem; padding: 1.5rem; width: 24rem; max-height: 80%; overflow:auto; }
+body { background-color: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+.gantt-container { display: grid; grid-template-columns: 320px 1fr; }
+.week-segment { flex: 1; border-right: 1px solid #1e293b; font-size: 8px; text-align: center; padding-top: 4px; color: #475569; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+.leave-bar:hover .tooltip { display: block; }
+.admin-only { display: none; }
+body.admin-mode .admin-only { display: block; }
+.status-low { color: #f87171; }
+.status-ok { color: #34d399; }
