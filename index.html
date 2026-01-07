@@ -21,7 +21,7 @@
             <input type="text" id="authUser" placeholder="Username" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500">
             <input type="password" id="authPass" placeholder="Password" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none focus:border-emerald-500">
             <button onclick="handleLogin()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg transition-all">SIGN IN</button>
-            <p class="text-center text-[10px] text-slate-500 mt-4">Forgot Password? <span class="text-emerald-500 font-bold">Please contact your System Admin.</span></p>
+            <p class="text-center text-[10px] text-slate-500 mt-4">Forgot Password? <span class="text-emerald-500 font-bold">Contact Admin to reset.</span></p>
         </div>
     </div>
 
@@ -46,7 +46,7 @@
         <div id="adminPanel" class="hidden space-y-6 mb-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <h3 class="text-emerald-400 text-xs font-bold uppercase mb-4">Organization Structure</h3>
+                    <h3 class="text-emerald-400 text-xs font-bold uppercase mb-4">1. Setup Departments & Teams</h3>
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
                             <input type="text" id="newDept" placeholder="New Dept" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-xs mb-2">
@@ -61,9 +61,9 @@
                 </div>
 
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <h3 class="text-purple-400 text-xs font-bold uppercase mb-4">Register New Account</h3>
+                    <h3 class="text-purple-400 text-xs font-bold uppercase mb-4">2. Register New Profile</h3>
                     <div class="grid grid-cols-2 gap-2 mb-2">
-                        <input type="text" id="regU" placeholder="Login ID (Username)" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs">
+                        <input type="text" id="regU" placeholder="Username (Login ID)" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs">
                         <input type="text" id="regN" placeholder="Full Name" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs">
                     </div>
                     <div class="grid grid-cols-3 gap-2 mb-2">
@@ -71,15 +71,15 @@
                         <select id="regD" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs" onchange="filterRegTeams()"></select>
                         <select id="regT" class="bg-slate-800 border border-slate-700 p-2 rounded text-xs"></select>
                     </div>
-                    <button onclick="createUser()" class="w-full bg-purple-600 py-2 rounded text-xs font-bold">SAVE USER ACCOUNT</button>
+                    <button onclick="createUser()" class="w-full bg-purple-600 py-2 rounded text-xs font-bold">CREATE PROFILE</button>
                 </div>
             </div>
 
             <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                <h3 class="text-slate-400 text-xs font-bold uppercase mb-4">System User Directory</h3>
+                <h3 class="text-slate-400 text-xs font-bold uppercase mb-4">3. User Directory & Password Management</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs text-slate-400">
-                        <thead><tr class="border-b border-slate-800"><th class="pb-2">Login ID</th><th class="pb-2">Name</th><th class="pb-2">Dept</th><th class="pb-2">Role</th><th class="pb-2">Actions</th></tr></thead>
+                        <thead><tr class="border-b border-slate-800"><th class="pb-2">ID</th><th class="pb-2">Name</th><th class="pb-2">Dept</th><th class="pb-2">Role</th><th class="pb-2">Actions</th></tr></thead>
                         <tbody id="userListTable"></tbody>
                     </table>
                 </div>
@@ -89,22 +89,22 @@
         <div id="actionPanel" class="mb-6 bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-xl">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <div id="staffSelectContainer" class="hidden">
-                    <label class="text-[10px] text-slate-500 font-bold block mb-1 uppercase">Apply For</label>
+                    <label class="text-[10px] text-slate-500 font-bold block mb-1 uppercase">Select Staff</label>
                     <select id="leaveStaffName" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm"></select>
                 </div>
                 <div id="selfNameContainer">
-                    <label class="text-[10px] text-slate-500 font-bold block mb-1 uppercase">Name</label>
+                    <label class="text-[10px] text-slate-500 font-bold block mb-1 uppercase">Your Name</label>
                     <input type="text" id="leaveSelfName" class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm" readonly>
                 </div>
                 <input type="date" id="leaveStart" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm">
                 <input type="date" id="leaveEnd" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm">
-                <button onclick="submitLeave()" class="bg-emerald-600 font-bold rounded py-2 text-sm hover:bg-emerald-500 transition-all">SUBMIT LEAVE</button>
+                <button onclick="submitLeave()" class="bg-emerald-600 font-bold rounded py-2 text-sm hover:bg-emerald-500 transition-all">SUBMIT ENTRY</button>
             </div>
         </div>
 
         <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
             <div class="gantt-container bg-slate-800/40 border-b border-slate-700">
-                <div class="p-4 font-bold text-slate-500 uppercase text-[10px] flex items-end border-r border-slate-700">Org Chart View</div>
+                <div class="p-4 font-bold text-slate-500 uppercase text-[10px] flex items-end border-r border-slate-700">Yearly Planner</div>
                 <div class="flex">
                     <script>
                         ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].forEach(m => 
@@ -117,17 +117,19 @@
     </div>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('ep_master_v3')) || {
+        // --- DATABASE ---
+        let db = JSON.parse(localStorage.getItem('ep_master_v4')) || {
             depts: [], teams: [], leaves: [],
             users: [{ user: "admin", pass: "admin123", name: "System Admin", role: "admin" }]
         };
         let session = null;
 
+        // --- AUTH ---
         function handleLogin() {
             const u = document.getElementById('authUser').value.trim();
             const p = document.getElementById('authPass').value.trim();
             const acc = db.users.find(x => x.user === u && x.pass === p);
-            if(acc) { session = acc; initDashboard(); } else { alert("Access Denied."); }
+            if(acc) { session = acc; initDashboard(); } else { alert("Login failed. Check ID/Password."); }
         }
 
         function logout() { session = null; location.reload(); }
@@ -135,7 +137,7 @@
         function initDashboard() {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('dashboardSection').classList.remove('hidden');
-            document.getElementById('userWelcome').innerText = `${session.name} | ${session.role.toUpperCase()} | ${session.dept || 'Admin Office'}`;
+            document.getElementById('userWelcome').innerText = `${session.name} | ${session.role.toUpperCase()} | ${session.dept || 'Global Admin'}`;
             
             document.getElementById('adminPanel').classList.toggle('hidden', session.role !== 'admin');
             
@@ -151,16 +153,17 @@
             renderChart();
         }
 
+        // --- PROFILE ---
         function toggleProfile() { document.getElementById('profilePanel').classList.toggle('hidden'); }
         function saveProfile() {
             const p = document.getElementById('editPass').value;
             if(!p) return;
             const idx = db.users.findIndex(x => x.user === session.user);
             db.users[idx].pass = p;
-            save(); alert("Password Updated!"); toggleProfile();
+            save(); alert("Password changed successfully."); toggleProfile();
         }
 
-        // --- ADMIN CONTROLS ---
+        // --- ADMIN: PROFILE CREATION & MANAGEMENT ---
         function addDept() { 
             const d = document.getElementById('newDept').value.trim();
             if(d) { db.depts.push(d); save(); refreshAdminUI(); }
@@ -178,23 +181,26 @@
             const uDept = document.getElementById('regD').value;
             const uTeam = document.getElementById('regT').value;
 
-            // Duplicate Check
-            if(db.users.some(x => x.user === uID)) return alert("Username already exists!");
-            if(!uID || !uName) return alert("Fill ID and Name");
+            // DUPLICATE USERNAME CHECK
+            if(db.users.some(x => x.user === uID)) {
+                return alert("ERROR: Username '" + uID + "' already exists. Choose another ID.");
+            }
+
+            if(!uID || !uName || !uDept) return alert("Please fill ID, Name and Department.");
 
             db.users.push({
                 user: uID, pass: "123", name: uName, role: uRole, dept: uDept,
                 team: uRole === 'manager' ? 'DEPT HEAD' : uTeam
             });
-            save(); refreshAdminUI(); alert("Account Created (Pass: 123)");
+            save(); refreshAdminUI(); alert("Profile created for " + uName + ". Temporary Password is 123");
         }
 
-        function adminEditPass(username) {
-            const nP = prompt("Enter new password for " + username);
+        function adminResetPass(username) {
+            const nP = prompt("Enter new password for " + username + ":");
             if(nP) {
                 const i = db.users.findIndex(u => u.user === username);
                 db.users[i].pass = nP;
-                save(); refreshAdminUI();
+                save(); refreshAdminUI(); alert("Password updated.");
             }
         }
 
@@ -212,9 +218,12 @@
 
             db.users.forEach(u => {
                 if(u.user === 'admin') return;
-                uT.innerHTML += `<tr class="border-b border-slate-800/50">
-                    <td class="py-2">${u.user}</td><td class="py-2">${u.name}</td><td>${u.dept}</td><td>${u.role}</td>
-                    <td><button onclick="adminEditPass('${u.user}')" class="text-blue-400 hover:underline">Reset Pass</button></td>
+                uT.innerHTML += `<tr class="border-b border-slate-800/50 hover:bg-slate-800/30">
+                    <td class="py-2 text-emerald-400 font-bold">${u.user}</td>
+                    <td class="py-2">${u.name}</td>
+                    <td>${u.dept}</td>
+                    <td>${u.role}</td>
+                    <td><button onclick="adminResetPass('${u.user}')" class="text-blue-400 hover:underline">Edit Pass</button></td>
                 </tr>`;
             });
             filterRegTeams();
@@ -258,8 +267,9 @@
             save(); renderChart();
         }
 
-        function save() { localStorage.setItem('ep_master_v3', JSON.stringify(db)); }
+        function save() { localStorage.setItem('ep_master_v4', JSON.stringify(db)); }
 
+        // --- RENDER ---
         function renderChart() {
             const body = document.getElementById('chartBody');
             body.innerHTML = '';
@@ -284,7 +294,7 @@
                             <div class="truncate"><div class="text-[11px] font-bold text-slate-200">${emp.name}</div><div class="text-[8px] text-slate-500 uppercase">${emp.team} | ${emp.status}</div></div>
                             <div class="flex gap-1">${controls}</div>
                         </div>
-                        <div class="relative h-14 w-full flex items-center bg-slate-800/5">
+                        <div class="relative h-14 w-full flex items-center px-1 bg-slate-800/5">
                             <div class="absolute h-6 rounded flex items-center px-2" style="left:${left}%; width:${width}%; background:${emp.status === 'approved' ? '#059669' : (emp.status === 'declined' ? '#991b1b' : '#334155')}">
                                 <span class="text-[8px] font-bold text-white uppercase truncate">${emp.status}</span>
                             </div>
