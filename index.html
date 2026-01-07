@@ -1,48 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Epic Piping: Leave Planner 2026</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epic Piping: Leave Planner 2026</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <div id="app"></div>
-    <script src="app.js"></script>
-<div class="admin-only mb-6 bg-slate-900 border-2 border-emerald-500/30 p-5 rounded-2xl shadow-2xl relative">
-    <h3 id="formTitle" class="text-emerald-400 font-bold text-xs mb-4 uppercase tracking-widest">Add New Leave Entry</h3>
-    <input type="hidden" id="editIndex" value="-1">
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
-        <div class="flex flex-col gap-1">
-            <label class="text-[10px] text-slate-500 font-bold">NAME</label>
-            <input type="text" id="newName" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500">
+<body class="p-4 md:p-6">
+
+<div class="max-w-[1650px] mx-auto">
+    <header class="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-6 gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-emerald-400 tracking-tight underline decoration-emerald-800">LEAVE RESOURCE PLANNER 2026</h1>
+            <p class="text-slate-500 text-sm">Conflict Engine + Team Availability + Management Tools</p>
         </div>
-        <div class="flex flex-col gap-1">
-            <label class="text-[10px] text-slate-500 font-bold">DESIGNATION</label>
-            <input type="text" id="newRole" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500">
-        </div>
-        <div class="flex flex-col gap-1">
-            <label class="text-[10px] text-slate-500 font-bold">TEAM</label>
-            <select id="newTeam" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
-                <option>Team B</option><option>Team C</option><option>Support Team</option><option>DC Team</option><option>Material Team</option>
+        <div class="flex flex-wrap gap-3 bg-slate-900/80 p-3 rounded-xl border border-slate-800 shadow-xl">
+            <input type="text" id="nameSearch" placeholder="Search name..." oninput="render()" class="bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-sm outline-none focus:border-emerald-500 w-40">
+            <select id="teamFilter" onchange="render()" class="bg-slate-800 border border-slate-700 rounded px-3 py-1.5 text-sm outline-none cursor-pointer">
+                <option value="All">All Teams</option>
+                <option value="Team B">Team B</option>
+                <option value="Team C">Team C</option>
+                <option value="Support Team">Support Team</option>
+                <option value="DC Team">DC Team</option>
+                <option value="Material Team">Material Team</option>
             </select>
+            <button onclick="toggleAdmin()" id="adminBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded text-sm font-bold transition-all shadow-lg">Admin Login</button>
         </div>
-        <div class="flex flex-col gap-1">
-            <label class="text-[10px] text-slate-500 font-bold">START DATE</label>
-            <input type="date" id="newStart" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+    </header>
+
+    <!-- Admin Panel -->
+    <div class="admin-only mb-6 bg-slate-900 border-2 border-emerald-500/30 p-5 rounded-2xl shadow-2xl relative">
+        <h3 id="formTitle" class="text-emerald-400 font-bold text-xs mb-4 uppercase tracking-widest">Add New Leave Entry</h3>
+        <input type="hidden" id="editIndex" value="-1">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] text-slate-500 font-bold">NAME</label>
+                <input type="text" id="newName" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500">
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] text-slate-500 font-bold">DESIGNATION</label>
+                <input type="text" id="newRole" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none focus:border-emerald-500">
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] text-slate-500 font-bold">TEAM</label>
+                <select id="newTeam" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+                    <option>Team B</option><option>Team C</option><option>Support Team</option><option>DC Team</option><option>Material Team</option>
+                </select>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] text-slate-500 font-bold">START DATE</label>
+                <input type="date" id="newStart" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] text-slate-500 font-bold">END DATE</label>
+                <input type="date" id="newEnd" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] text-slate-500 font-bold">ACTION</label>
+                <button id="saveBtn" onclick="saveEntry()" class="bg-emerald-500 text-slate-900 font-black h-full rounded hover:bg-emerald-400 transition-colors py-2">SAVE ENTRY</button>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-[10px] text-slate-500 font-bold">SYSTEM</label>
+                <button onclick="resetData()" class="bg-red-900/50 text-red-400 font-bold h-full rounded hover:bg-red-800 transition-colors py-2 border border-red-800/50">WIPE ALL</button>
+            </div>
         </div>
-        <div class="flex flex-col gap-1">
-            <label class="text-[10px] text-slate-500 font-bold">END DATE</label>
-            <input type="date" id="newEnd" class="bg-slate-800 border border-slate-700 p-2 rounded text-sm outline-none">
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="lg:col-span-1 space-y-6">
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Team Availability %</h2>
+                <div id="availabilityStats" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div>
+            </div>
+            <div id="conflictPanel" class="hidden bg-red-950/20 border border-red-900/40 rounded-xl p-4 shadow-inner">
+                <h2 class="text-red-500 font-bold text-xs uppercase tracking-widest mb-3">⚠️ Critical Collapses</h2>
+                <div id="conflictList" class="space-y-2"></div>
+            </div>
         </div>
-        <div class="flex flex-col gap-1">
-            <label class="text-[10px] text-slate-500 font-bold">ACTION</label>
-            <button id="saveBtn" onclick="saveEntry()" class="bg-emerald-500 text-slate-900 font-black h-full rounded hover:bg-emerald-400 transition-colors py-2">SAVE ENTRY</button>
-        </div>
-        <div class="flex flex-col gap-1">
-            <label class="text-[10px] text-slate-500 font-bold">SYSTEM</label>
-            <button onclick="resetData()" class="bg-red-900/50 text-red-400 font-bold h-full rounded hover:bg-red-800 transition-colors py-2 border border-red-800/50">WIPE ALL</button>
+        <div class="lg:col-span-3 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
+            <div class="gantt-container bg-slate-800/40 border-b border-slate-700">
+                <div class="p-4 font-bold text-slate-400 border-r border-slate-700 uppercase text-[10px] tracking-widest flex items-end">Organization View</div>
+                <div class="flex flex-col">
+                    <div class="flex border-b border-slate-700/50">
+                        <script>
+                            ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].forEach(m => 
+                                document.write(`<div class="flex-1 text-center py-2 text-[10px] font-bold uppercase border-r border-slate-700/50 text-slate-400">${m}</div>`));
+                        </script>
+                    </div>
+                    <div class="flex">
+                        <script>
+                            for(let i=0; i<12; i++) {
+                                document.write('<div class="flex-1 flex border-r border-slate-700/30">');
+                                for(let j=1; j<=4; j++) document.write(`<div class="week-segment">W${j}</div>`);
+                                document.write('</div>');
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div id="chartBody" class="max-h-[60vh] overflow-y-auto"></div>
         </div>
     </div>
 </div>
+
+<script src="app.js"></script>
 </body>
 </html>
